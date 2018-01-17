@@ -1,0 +1,15 @@
+{
+  "name": "cvsread",
+  "version": "1.0.0",
+  "description": "Leitura de CVS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Everton de Souza",
+  "license": "MIT",
+  "dependencies": {
+    "csvtojson": "^1.1.9",
+    "utf8": "^3.0.0"
+  }
+}
