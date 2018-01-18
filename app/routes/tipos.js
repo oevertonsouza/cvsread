@@ -6,7 +6,6 @@ module.exports = function(application) {
     var tiposModel = application.app.models.tiposModel;
 
     tiposModel.getTipos(connection, function(err, result){
-        console.log(result);
         res.send(result);
     });
   });
