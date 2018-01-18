@@ -1,43 +1,46 @@
-
-var teste;
-var value = function(teste){
-  var path = require('path');
-  const csv = require('csvtojson')
-
-  var cvsPath =  path.dirname(require.main.filename) +'/'+'escolas.csv';
-  const csvFilePath = cvsPath;
-
-  var contador = 0;
-  var limit = 10;
-  var result;
-
-  csv()
-    .fromFile(csvFilePath)
-    .on('csv', (csvRow)=>{
-        // Converte a linha em um Array
-        var data = csvRow[0].toString().split(";")
-        //seta a variavel com a posição do Array
-        var endereco = data[6];
+var app = require('../../config/server');
+var path = require('path');
+const csv = require('csvtojson');
+var tiposModel = app.app.models.tiposModel;
+var connection = app.config.dbConnection();
 
 
-        if(endereco != undefined ){
-            result = parse(data);
-            return result;
-        }
-        return result;
-        process.exit(1);
+var cvsPath =  path.dirname(require.main.filename) +'/'+'escolas.csv';
+const csvFilePath = cvsPath;
 
-    })
-    .on('done',(error)=>{
-        console.log(error)
-    });
+var contador = 0;
+var limit = 10;
+var result;
 
-    return result;
-}
+console.log(csvFilePath);
 
-function setValue(value){
+csv()
+  .fromFile(csvFilePath)
+  .on('csv', (csvRow)=>{
+      // Converte a linha em um Array
+      var data = csvRow[0].toString().split(";")
+      //seta a variavel com a posição do Array
+      var endereco = data[6];
 
-}
+      if(endereco != undefined ){
+          escola = parse(data);
+          tiposModel.getTipoByDescription(escola.tipodesc, connection, function(err, result){
+              console.log(result);
+          });
+      }
+
+  })
+  .on('done',(error)=>{
+      console.log(error)
+});
+
+
+
+
+
+
+
+
 
 function parse(data){
   var result = '{ "tipodesc" : null, "nomesc" : null, "diretoria" : null, "subpref" : null, "ceu" : null, "endereco" : null, "numero" : null, "bairro" : null, "cep" : null, "tel1" : null, "tel2" : null, "situacao" : null, "distrito" : null, "latitude" : null, "longitude" : null, "cidade" : null, "estado" : null }';
@@ -63,10 +66,3 @@ function parse(data){
 
   return resultJson
 }
-
-console.log('aiaiai' + value());
-
-
-module.exports = function(){
-  return value;
-};

@@ -6,7 +6,7 @@ module.exports = function(application) {
     var connection = application.config.dbConnection();
     var tiposModel = application.app.models.tiposModel;
 
-    tiposModel.getTipo(req.query.id, connection, function(err, result){
+      tiposModel.getTipoById(req.query.id, connection, function(err, result){
         res.send(result);
       });
   });

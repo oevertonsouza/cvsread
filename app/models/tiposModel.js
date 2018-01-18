@@ -1,13 +1,21 @@
 module.exports = function(){
 
+  //Pegar todos os tipos
   this.getTipos = function(connection, callback){
     connection.query('select * from TIPOS;', callback);
   };
 
-  this.getTipo = function(id, connection, callback){
+  //Pegar tipo por ID
+  this.getTipoById = function(id, connection, callback){
     connection.query(`select * from TIPOS where ID = ${id};`, callback);
   };
 
+  //Pegar tipo por ID
+  this.getTipoByDescription = function(descricao, connection, callback){
+    connection.query(`select * from TIPOS where ID = ${descricao};`, callback);
+  };
+
+  //Inserit tipo
   this.postTipo = function(descricao , connection, callback){
     connection.query(`insert into TIPOS ( DESCRICAO ) VALUES ( "${descricao}" );`, callback);
   };
