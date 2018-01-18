@@ -5,7 +5,11 @@ module.exports = function(){
   };
 
   this.getTipo = function(id, connection, callback){
-    connection.query(`select * from TIPOS where ID = ${id}`, callback);
+    connection.query(`select * from TIPOS where ID = ${id};`, callback);
+  };
+
+  this.postTipo = function(descricao , connection, callback){
+    connection.query(`insert into TIPOS ( DESCRICAO ) VALUES ( "${descricao}" );`, callback);
   };
 
   return this;
