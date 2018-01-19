@@ -2,12 +2,13 @@ var app = require('./config/server');
 var path = require('path');
 const csv = require('csvtojson');
 var tiposModel = app.app.models.tiposModel;
+var estadosModel = app.app.models.estadosModel;
 var connection = app.config.dbConnection();
 
 
 var cvsPath =  path.dirname(require.main.filename) +'/'+'escolas.csv';
 const csvFilePath = cvsPath;
-
+console.log(cvsPath);
 var contador = 0;
 var limit = 10;
 var escolas = [];
@@ -33,14 +34,10 @@ csv()
 
 
 function popularBd(escolas){
-  var result = '{ "tipo" : null, "nomesc" : null, "diretoria" : null, "subpref" : null, "ceu" : null, "endereco" : null, "numero" : null, "bairro" : null, "cep" : null, "tel1" : null, "tel2" : null, "situacao" : null, "distrito" : null, "latitude" : null, "longitude" : null, "cidade" : null, "estado" : null }';
-  result = JSON.parse(result);
-  result.tipo = populaTipo(escolas);
+  //populaTipo(escolas);
+  //populaEstado(escolas);
+  populaCidade(escolas);
 };
-
-
-
-
 
 
 function populaTipo(escolas){
@@ -62,10 +59,53 @@ function populaTipo(escolas){
   tiposModel.postTipo(res, connection, function(err, result){
     console.log(result);
   });
-
 }
 
+function populaEstado(escolas){
+  var values = []
+  var res = []
+  for(i = 0; i < escolas.length; i++){
+    if(values.indexOf(escolas[i].estado) <= 0 ){
+        values.push(escolas[i].estado);
+    };
+  };
+  estados = values.filter(function(item, pos) {
+    return values.indexOf(item) == pos ;
+  });
 
+  for(i = 0; i < estados.length; i++){
+      res.push([estados[i]]);
+  }
+
+  estadosModel.postEstado(res, connection, function(err, result){
+    console.log(result);
+  });
+}
+
+function populaCidade(escolas){
+
+  var cidades = []
+  var estados = []
+  var res = []
+
+  for(i = 0; i < escolas.length; i++){
+    if(cidades.indexOf(escolas[i].cidade) <= 0 ){
+        cidades.push(escolas[i].cidade,escolas[i].estado);
+    };
+  };
+
+  cidadesUnique = cidades.filter(function(item, pos) {
+    return cidades.indexOf(item) == pos;
+  });
+
+  for(i = 0; i < cidadesUnique.length; i++){
+      res.push(cidadesUnique[i]);
+  }
+  console.log([res])
+  //cidadesModel.postCidade(res, connection, function(err, result){
+    //console.log(result);
+  //});
+}
 
 
 

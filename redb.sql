@@ -1,0 +1,333 @@
+-- MySQL dump 10.14  Distrib 5.5.44-MariaDB, for Linux (x86_64)
+--
+-- Host: localhost    Database: redb
+-- ------------------------------------------------------
+-- Server version	5.5.44-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `BAIRROS`
+--
+
+DROP TABLE IF EXISTS `BAIRROS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `BAIRROS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `DESCRICAO` varchar(150) NOT NULL,
+  `DISTRITO_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `DISTRITO_ID` (`DISTRITO_ID`),
+  CONSTRAINT `BAIRROS_ibfk_1` FOREIGN KEY (`DISTRITO_ID`) REFERENCES `DISTRITOS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `BAIRROS`
+--
+
+LOCK TABLES `BAIRROS` WRITE;
+/*!40000 ALTER TABLE `BAIRROS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `BAIRROS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `CIDADES`
+--
+
+DROP TABLE IF EXISTS `CIDADES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `CIDADES` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `DESCRICAO` varchar(150) NOT NULL,
+  `ESTADO_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `ESTADO_ID` (`ESTADO_ID`),
+  CONSTRAINT `CIDADES_ibfk_1` FOREIGN KEY (`ESTADO_ID`) REFERENCES `ESTADOS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `CIDADES`
+--
+
+LOCK TABLES `CIDADES` WRITE;
+/*!40000 ALTER TABLE `CIDADES` DISABLE KEYS */;
+/*!40000 ALTER TABLE `CIDADES` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `DIRETORIAS`
+--
+
+DROP TABLE IF EXISTS `DIRETORIAS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DIRETORIAS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NOME` varchar(50) DEFAULT NULL,
+  `DESCRICAO` varchar(50) NOT NULL,
+  `ENDERECO_ID` int(11) DEFAULT NULL,
+  `TELEFONE_ID` int(11) DEFAULT NULL,
+  `EMAIL` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `ENDERECO_ID` (`ENDERECO_ID`),
+  KEY `TELEFONE_ID` (`TELEFONE_ID`),
+  CONSTRAINT `DIRETORIAS_ibfk_1` FOREIGN KEY (`ENDERECO_ID`) REFERENCES `ENDERECOS` (`ID`),
+  CONSTRAINT `DIRETORIAS_ibfk_2` FOREIGN KEY (`TELEFONE_ID`) REFERENCES `TELEFONES` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DIRETORIAS`
+--
+
+LOCK TABLES `DIRETORIAS` WRITE;
+/*!40000 ALTER TABLE `DIRETORIAS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `DIRETORIAS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `DISTRITOS`
+--
+
+DROP TABLE IF EXISTS `DISTRITOS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `DISTRITOS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `DESCRICAO` varchar(150) NOT NULL,
+  `CIDADE_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CIDADE_ID` (`CIDADE_ID`),
+  CONSTRAINT `DISTRITOS_ibfk_1` FOREIGN KEY (`CIDADE_ID`) REFERENCES `CIDADES` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `DISTRITOS`
+--
+
+LOCK TABLES `DISTRITOS` WRITE;
+/*!40000 ALTER TABLE `DISTRITOS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `DISTRITOS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ENDERECOS`
+--
+
+DROP TABLE IF EXISTS `ENDERECOS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ENDERECOS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ENDERECO` varchar(150) NOT NULL,
+  `NUMERO` int(11) DEFAULT NULL,
+  `CEP` varchar(10) NOT NULL,
+  `CIDADE_ID` int(11) NOT NULL,
+  `ESTADO_ID` int(11) NOT NULL,
+  `DISTRITO_ID` int(11) NOT NULL,
+  `BAIRRO_ID` int(11) NOT NULL,
+  `LATITUDE` decimal(11,8) DEFAULT NULL,
+  `LONGITUDE` decimal(11,8) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CIDADE_ID` (`CIDADE_ID`),
+  KEY `ESTADO_ID` (`ESTADO_ID`),
+  KEY `DISTRITO_ID` (`DISTRITO_ID`),
+  KEY `BAIRRO_ID` (`BAIRRO_ID`),
+  CONSTRAINT `ENDERECOS_ibfk_1` FOREIGN KEY (`CIDADE_ID`) REFERENCES `CIDADES` (`ID`),
+  CONSTRAINT `ENDERECOS_ibfk_2` FOREIGN KEY (`ESTADO_ID`) REFERENCES `ESTADOS` (`ID`),
+  CONSTRAINT `ENDERECOS_ibfk_3` FOREIGN KEY (`DISTRITO_ID`) REFERENCES `DISTRITOS` (`ID`),
+  CONSTRAINT `ENDERECOS_ibfk_4` FOREIGN KEY (`BAIRRO_ID`) REFERENCES `BAIRROS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ENDERECOS`
+--
+
+LOCK TABLES `ENDERECOS` WRITE;
+/*!40000 ALTER TABLE `ENDERECOS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ENDERECOS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ESCOLAS`
+--
+
+DROP TABLE IF EXISTS `ESCOLAS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ESCOLAS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NOME` varchar(255) NOT NULL,
+  `TELEFONE_ID` int(11) DEFAULT NULL,
+  `DIRETORIA_ID` int(11) NOT NULL,
+  `SUBPREFEITURA_ID` int(11) NOT NULL,
+  `ENDERECO_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ESCOLAS`
+--
+
+LOCK TABLES `ESCOLAS` WRITE;
+/*!40000 ALTER TABLE `ESCOLAS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ESCOLAS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ESCOLAS_TIPOS`
+--
+
+DROP TABLE IF EXISTS `ESCOLAS_TIPOS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ESCOLAS_TIPOS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `ESCOLA_ID` int(11) NOT NULL,
+  `TIPO_ID` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `ESCOLA_ID` (`ESCOLA_ID`),
+  KEY `TIPO_ID` (`TIPO_ID`),
+  CONSTRAINT `ESCOLAS_TIPOS_ibfk_1` FOREIGN KEY (`ESCOLA_ID`) REFERENCES `ESCOLAS` (`ID`),
+  CONSTRAINT `ESCOLAS_TIPOS_ibfk_2` FOREIGN KEY (`TIPO_ID`) REFERENCES `TIPOS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ESCOLAS_TIPOS`
+--
+
+LOCK TABLES `ESCOLAS_TIPOS` WRITE;
+/*!40000 ALTER TABLE `ESCOLAS_TIPOS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ESCOLAS_TIPOS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ESTADOS`
+--
+
+DROP TABLE IF EXISTS `ESTADOS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ESTADOS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `DESCRICAO` varchar(2) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ESTADOS`
+--
+
+LOCK TABLES `ESTADOS` WRITE;
+/*!40000 ALTER TABLE `ESTADOS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ESTADOS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `SUBPREFEITURAS`
+--
+
+DROP TABLE IF EXISTS `SUBPREFEITURAS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `SUBPREFEITURAS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NOME` varchar(50) DEFAULT NULL,
+  `DESCRICAO` varchar(50) NOT NULL,
+  `ENDERECO_ID` int(11) DEFAULT NULL,
+  `TELEFONE_ID` int(11) DEFAULT NULL,
+  `EMAIL` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `ENDERECO_ID` (`ENDERECO_ID`),
+  KEY `TELEFONE_ID` (`TELEFONE_ID`),
+  CONSTRAINT `SUBPREFEITURAS_ibfk_1` FOREIGN KEY (`ENDERECO_ID`) REFERENCES `ENDERECOS` (`ID`),
+  CONSTRAINT `SUBPREFEITURAS_ibfk_2` FOREIGN KEY (`TELEFONE_ID`) REFERENCES `TELEFONES` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `SUBPREFEITURAS`
+--
+
+LOCK TABLES `SUBPREFEITURAS` WRITE;
+/*!40000 ALTER TABLE `SUBPREFEITURAS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `SUBPREFEITURAS` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `TELEFONES`
+--
+
+DROP TABLE IF EXISTS `TELEFONES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TELEFONES` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `TEL1DDD` int(11) DEFAULT NULL,
+  `TELEFONE1` int(11) DEFAULT NULL,
+  `TEL2DDD` int(11) DEFAULT NULL,
+  `TELEFONE2` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `TELEFONES`
+--
+
+LOCK TABLES `TELEFONES` WRITE;
+/*!40000 ALTER TABLE `TELEFONES` DISABLE KEYS */;
+/*!40000 ALTER TABLE `TELEFONES` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `TIPOS`
+--
+
+DROP TABLE IF EXISTS `TIPOS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `TIPOS` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `DESCRICAO` varchar(10) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `TIPOS`
+--
+
+LOCK TABLES `TIPOS` WRITE;
+/*!40000 ALTER TABLE `TIPOS` DISABLE KEYS */;
+/*!40000 ALTER TABLE `TIPOS` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2018-01-19 11:11:57
