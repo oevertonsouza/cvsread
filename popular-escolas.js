@@ -3,6 +3,7 @@ var path = require('path');
 const csv = require('csvtojson');
 var tiposModel = app.app.models.tiposModel;
 var estadosModel = app.app.models.estadosModel;
+var cidadesModel = app.app.models.cidadesModel;
 var connection = app.config.dbConnection();
 
 
@@ -34,8 +35,8 @@ csv()
 
 
 function popularBd(escolas){
-  //populaTipo(escolas);
-  //populaEstado(escolas);
+  populaTipo(escolas);
+  populaEstado(escolas);
   populaCidade(escolas);
 };
 
@@ -85,8 +86,8 @@ function populaEstado(escolas){
 function populaCidade(escolas){
 
   var cidades = []
-  var estados = []
   var res = []
+  var estados = []
 
   for(i = 0; i < escolas.length; i++){
     if(cidades.indexOf(escolas[i].cidade) <= 0 ){
@@ -98,10 +99,20 @@ function populaCidade(escolas){
     return cidades.indexOf(item) == pos;
   });
 
-  for(i = 0; i < cidadesUnique.length; i++){
-      res.push(cidadesUnique[i]);
+
+  for(i = 0; i < cidadesUnique.length; i = i + 2){
+      res.push([cidadesUnique[i], cidadesUnique[i + 1]])
   }
-  console.log([res])
+
+  res.forEach(function(value){
+    cidadesModel.postCidadeDescEstado(value, connection, function(err, result){
+        console.log(result);
+    });
+  });
+
+  /*
+
+  */
   //cidadesModel.postCidade(res, connection, function(err, result){
     //console.log(result);
   //});
