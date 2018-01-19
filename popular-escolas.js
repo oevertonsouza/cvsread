@@ -4,7 +4,9 @@ const csv = require('csvtojson');
 var tiposModel = app.app.models.tiposModel;
 var estadosModel = app.app.models.estadosModel;
 var cidadesModel = app.app.models.cidadesModel;
+var distitosModel = app.app.models.distritosModel;
 var connection = app.config.dbConnection();
+
 
 
 var cvsPath =  path.dirname(require.main.filename) +'/'+'escolas.csv';
@@ -22,8 +24,10 @@ csv()
       var data = csvRow[0].toString().split(";")
       //seta a variavel com a posição do Array
       var endereco = data[6];
+      var distrito = data[12];
+      var cidade = data[15];
 
-      if(endereco != undefined ){
+      if(endereco != undefined || distrito != undefined || cidade != undefined){
           escolas[contador] = parse(data);
           contador = contador + 1;
       }
@@ -35,9 +39,10 @@ csv()
 
 
 function popularBd(escolas){
-  populaTipo(escolas);
-  populaEstado(escolas);
-  populaCidade(escolas);
+  //populaTipo(escolas);
+  //populaEstado(escolas);
+  //populaCidade(escolas);
+  populaDistrito(escolas);
 };
 
 
@@ -73,11 +78,9 @@ function populaEstado(escolas){
   estados = values.filter(function(item, pos) {
     return values.indexOf(item) == pos ;
   });
-
   for(i = 0; i < estados.length; i++){
       res.push([estados[i]]);
   }
-
   estadosModel.postEstado(res, connection, function(err, result){
     console.log(result);
   });
@@ -87,38 +90,75 @@ function populaCidade(escolas){
 
   var cidades = []
   var res = []
+  var resultado = []
   var estados = []
 
   for(i = 0; i < escolas.length; i++){
-    if(cidades.indexOf(escolas[i].cidade) <= 0 ){
-        cidades.push(escolas[i].cidade,escolas[i].estado);
-    };
+      cidades.push(escolas[i].cidade,escolas[i].estado);
   };
 
   cidadesUnique = cidades.filter(function(item, pos) {
     return cidades.indexOf(item) == pos;
   });
 
+  var map = cidadesUnique.reduce(function(prev, cur) {
+      prev[cur] = prev[cur];
+      return prev;
+    }, {});
 
-  for(i = 0; i < cidadesUnique.length; i = i + 2){
-      res.push([cidadesUnique[i], cidadesUnique[i + 1]])
+
+  for (var key in map) {
+      cid = key.split(',');
+      if(cid[0] != '' && cid[1] != ''){
+         res.push(cid);
+      }
   }
 
-  res.forEach(function(value){
+  for(var i = 0; i < res.length; i = i + 2){
+      resultado.push(res[i].concat(res[i + 1]));
+  }
+
+  resultado.forEach(function(value){
     cidadesModel.postCidadeDescEstado(value, connection, function(err, result){
         console.log(result);
     });
   });
 
-  /*
-
-  */
-  //cidadesModel.postCidade(res, connection, function(err, result){
-    //console.log(result);
-  //});
 }
 
+function populaDistrito(escolas){
 
+  var distrito = []
+  var cidade = []
+  var res = []
+
+  for(i = 0; i < escolas.length; i++){
+    distrito.push([escolas[i].distrito,escolas[i].cidade]);
+  };
+
+  distritoUnique = distrito.filter(function(item, pos) {
+    return distrito.indexOf(item) == pos;
+  });
+
+  var map = distritoUnique.reduce(function(prev, cur) {
+    prev[cur] = prev[cur];
+    return prev;
+  }, {});
+
+ for (var key in map) {
+   dist = key.split(',');
+   if(dist[0] != '' && dist[1] != ''){
+     res.push(dist);
+   }
+ }
+
+ res.forEach(function(value){
+   distitosModel.postDistritoDescCidade(value, connection, function(err, result){
+       console.log(result);
+   });
+ });
+
+}
 
 function parse(data){
   var result = '{ "tipodesc" : null, "nomesc" : null, "diretoria" : null, "subpref" : null, "ceu" : null, "endereco" : null, "numero" : null, "bairro" : null, "cep" : null, "tel1" : null, "tel2" : null, "situacao" : null, "distrito" : null, "latitude" : null, "longitude" : null, "cidade" : null, "estado" : null }';
