@@ -1,4 +1,4 @@
-var app = require('../../config/server');
+var app = require('./config/server');
 var path = require('path');
 const csv = require('csvtojson');
 var tiposModel = app.app.models.tiposModel;
@@ -10,9 +10,7 @@ const csvFilePath = cvsPath;
 
 var contador = 0;
 var limit = 10;
-var result;
-
-console.log(csvFilePath);
+var escolas = [];
 
 csv()
   .fromFile(csvFilePath)
@@ -23,23 +21,25 @@ csv()
       var endereco = data[6];
 
       if(endereco != undefined ){
-          escola = parse(data);
-          tiposModel.getTipoByDescription(escola.tipodesc, connection, function(err, result){
-              console.log(result);
-          });
+          escolas[contador] = parse(data);
+          contador = contador + 1;
       }
 
   })
   .on('done',(error)=>{
-      console.log(error)
+      popularBd(escolas)
 });
 
 
+function popularBd(escolas){
+  var tipo;
 
+  tiposModel.getTipoByDescription(escolas[0].tipodesc, connection, function(err, res){
+      res => tipo = JSON.parse(JSON.stringify(res))[0].ID;
+      console.log(tipo);
+  });
 
-
-
-
+}
 
 
 function parse(data){

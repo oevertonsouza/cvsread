@@ -12,7 +12,8 @@ module.exports = function(){
 
   //Pegar tipo por ID
   this.getTipoByDescription = function(descricao, connection, callback){
-    connection.query(`select * from TIPOS where ID = ${descricao};`, callback);
+    var query = `select ID from TIPOS where DESCRICAO = "${descricao}";`;
+    connection.query(query, callback);
   };
 
   //Inserit tipo
