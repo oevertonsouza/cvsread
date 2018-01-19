@@ -11,6 +11,7 @@ const csvFilePath = cvsPath;
 var contador = 0;
 var limit = 10;
 var escolas = [];
+var tipo = []
 
 csv()
   .fromFile(csvFilePath)
@@ -32,14 +33,40 @@ csv()
 
 
 function popularBd(escolas){
-  var tipo;
+  var result = '{ "tipo" : null, "nomesc" : null, "diretoria" : null, "subpref" : null, "ceu" : null, "endereco" : null, "numero" : null, "bairro" : null, "cep" : null, "tel1" : null, "tel2" : null, "situacao" : null, "distrito" : null, "latitude" : null, "longitude" : null, "cidade" : null, "estado" : null }';
+  result = JSON.parse(result);
+  result.tipo = populaTipo(escolas);
+};
 
-  tiposModel.getTipoByDescription(escolas[0].tipodesc, connection, function(err, res){
-      res => tipo = JSON.parse(JSON.stringify(res))[0].ID;
-      console.log(tipo);
+
+
+
+
+
+function populaTipo(escolas){
+  var values = []
+  var res = []
+  for(i = 0; i < escolas.length; i++){
+    if(values.indexOf(escolas[i].tipodesc) <= 0 ){
+        values.push(escolas[i].tipodesc);
+    };
+  };
+  tipos = values.filter(function(item, pos) {
+    return values.indexOf(item) == pos ;
+  });
+
+  for(i = 0; i < tipos.length; i++){
+      res.push([tipos[i]]);
+  }
+
+  tiposModel.postTipo(res, connection, function(err, result){
+    console.log(result);
   });
 
 }
+
+
+
 
 
 function parse(data){

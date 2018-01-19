@@ -18,7 +18,7 @@ module.exports = function(){
 
   //Inserit tipo
   this.postTipo = function(descricao , connection, callback){
-    connection.query(`insert into TIPOS ( DESCRICAO ) VALUES ( "${descricao}" );`, callback);
+    connection.query(`insert into TIPOS ( DESCRICAO ) VALUES ?;`, [descricao] , callback);
   };
 
   return this;
