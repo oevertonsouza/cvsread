@@ -1,13 +1,14 @@
 var app = require('./config/server');
 var path = require('path');
 const csv = require('csvtojson');
+
 var tiposModel = app.app.models.tiposModel;
 var estadosModel = app.app.models.estadosModel;
 var cidadesModel = app.app.models.cidadesModel;
 var distitosModel = app.app.models.distritosModel;
+var bairrosModel = app.app.models.bairrosModel;
+
 var connection = app.config.dbConnection();
-
-
 
 var cvsPath =  path.dirname(require.main.filename) +'/'+'escolas.csv';
 const csvFilePath = cvsPath;
@@ -39,10 +40,11 @@ csv()
 
 
 function popularBd(escolas){
-  //populaTipo(escolas);
-  //populaEstado(escolas);
-  //populaCidade(escolas);
+  populaTipo(escolas);
+  populaEstado(escolas);
+  populaCidade(escolas);
   populaDistrito(escolas);
+  populaBairro(escolas);
 };
 
 
@@ -157,6 +159,40 @@ function populaDistrito(escolas){
        console.log(result);
    });
  });
+
+}
+
+function populaBairro(escolas){
+
+  var bairro = []
+  var distrito = []
+  var res = []
+
+  for(i = 0; i < escolas.length; i++){
+    bairro.push([escolas[i].bairro,escolas[i].distrito]);
+  };
+
+  bairroUnique = bairro.filter(function(item, pos) {
+    return bairro.indexOf(item) == pos;
+  });
+
+  var map = bairroUnique.reduce(function(prev, cur) {
+    prev[cur] = prev[cur];
+    return prev;
+  }, {});
+
+  for (var key in map) {
+    dist = key.split(',');
+    if(dist[0] != '' && dist[1] != ''){
+      res.push(dist);
+    }
+  }
+
+  res.forEach(function(value){
+    bairrosModel.postBairroDescDistrito(value, connection, function(err, result){
+        console.log(result);
+    });
+  });
 
 }
 
