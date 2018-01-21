@@ -7,6 +7,9 @@ var estadosModel = app.app.models.estadosModel;
 var cidadesModel = app.app.models.cidadesModel;
 var distitosModel = app.app.models.distritosModel;
 var bairrosModel = app.app.models.bairrosModel;
+var enderecosModel = app.app.models.enderecosModel;
+var diretoriasModel = app.app.models.diretoriasModel;
+var subprefeiturasModel = app.app.models.subprefeiturasModel;
 
 var connection = app.config.dbConnection();
 
@@ -40,11 +43,14 @@ csv()
 
 
 function popularBd(escolas){
-  populaTipo(escolas);
-  populaEstado(escolas);
-  populaCidade(escolas);
-  populaDistrito(escolas);
-  populaBairro(escolas);
+  //populaTipo(escolas);
+  //populaEstado(escolas);
+  //populaCidade(escolas);
+  //populaDistrito(escolas);
+  //populaBairro(escolas);
+  //populaEndereco(escolas);
+  //populaDiretoria(escolas);
+  populaSubprefeitura(escolas);
 };
 
 
@@ -165,7 +171,6 @@ function populaDistrito(escolas){
 function populaBairro(escolas){
 
   var bairro = []
-  var distrito = []
   var res = []
 
   for(i = 0; i < escolas.length; i++){
@@ -190,6 +195,98 @@ function populaBairro(escolas){
 
   res.forEach(function(value){
     bairrosModel.postBairroDescDistrito(value, connection, function(err, result){
+        console.log(result);
+    });
+  });
+
+}
+
+function populaEndereco(escolas){
+
+  var endereco = []
+  var res = []
+
+  for(i = 0; i < escolas.length; i++){
+    endereco.push([escolas[i].endereco,escolas[i].numero,escolas[i].cep,escolas[i].bairro,escolas[i].distrito,escolas[i].cidade,escolas[i].estado,escolas[i].latitude,escolas[i].longitude]);
+  };
+
+  enderecoUnique = endereco.filter(function(item, pos) {
+    return endereco.indexOf(item) == pos;
+  });
+
+  var map = enderecoUnique.reduce(function(prev, cur) {
+    prev[cur] = prev[cur];
+    return prev;
+  }, {});
+
+  for (var key in map) {
+    dist = key.split(',');
+    if(dist[0] != '' && dist[1] != ''){
+      res.push(dist);
+    }
+  }
+
+  //console.log(res);
+  res.forEach(function(value){
+    enderecosModel.postEnderecoByDescriptions(value, connection, function(err, result){
+        console.log(result);
+    });
+  });
+
+}
+
+function populaDiretoria(escolas){
+
+  var diretoria = []
+  var res = []
+
+  for(i = 0; i < escolas.length; i++){
+    diretoria.push([escolas[i].diretoria]);
+  };
+
+  var map = diretoria.reduce(function(prev, cur) {
+    prev[cur] = prev[cur];
+    return prev;
+  }, {});
+
+  for (var key in map) {
+    dist = key.split(',');
+    if(dist[0] != '' && dist[1] != ''){
+      res.push(dist);
+    }
+  }
+
+  res.forEach(function(value){
+    diretoriasModel.postDiretoriaOnlyDesc(value[0], connection, function(err, result){
+        console.log(result);
+    });
+  });
+
+}
+
+function populaSubprefeitura(escolas){
+
+  var subprefeitura = []
+  var res = []
+
+  for(i = 0; i < escolas.length; i++){
+    subprefeitura.push([escolas[i].subpref]);
+  };
+
+  var map = subprefeitura.reduce(function(prev, cur) {
+    prev[cur] = prev[cur];
+    return prev;
+  }, {});
+
+  for (var key in map) {
+    dist = key.split(',');
+    if(dist[0] != '' && dist[1] != ''){
+      res.push(dist);
+    }
+  }
+
+  res.forEach(function(value){
+    subprefeiturasModel.postSubprefeituraOnlyDesc(value[0], connection, function(err, result){
         console.log(result);
     });
   });
