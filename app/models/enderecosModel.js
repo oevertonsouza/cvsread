@@ -20,6 +20,9 @@ module.exports = function(){
 
       var endereco = escola[0];
       var numero = escola[1];
+      if(escola[1] == 'S/N'){
+        numero = -1
+      }
       var cep = escola[2];
       var bairro = escola[3];
       var distrito = escola[4];

@@ -10,12 +10,13 @@ var bairrosModel = app.app.models.bairrosModel;
 var enderecosModel = app.app.models.enderecosModel;
 var diretoriasModel = app.app.models.diretoriasModel;
 var subprefeiturasModel = app.app.models.subprefeiturasModel;
+var escolasModel = app.app.models.escolasModel;
 
 var connection = app.config.dbConnection();
 
 var cvsPath =  path.dirname(require.main.filename) +'/'+'escolas.csv';
 const csvFilePath = cvsPath;
-console.log(cvsPath);
+
 var contador = 0;
 var limit = 10;
 var escolas = [];
@@ -25,17 +26,12 @@ csv()
   .fromFile(csvFilePath)
   .on('csv', (csvRow)=>{
       // Converte a linha em um Array
-      var data = csvRow[0].toString().split(";")
-      //seta a variavel com a posição do Array
-      var endereco = data[6];
-      var distrito = data[12];
-      var cidade = data[15];
-
-      if(endereco != undefined || distrito != undefined || cidade != undefined){
-          escolas[contador] = parse(data);
-          contador = contador + 1;
+      var data = csvRow[0].toString().replace(',' , '.').split(";");
+      var escola = parse(data)
+      if(verifyOk(escola)){
+        escolas[contador] = escola;
       }
-
+      contador = contador + 1;
   })
   .on('done',(error)=>{
       popularBd(escolas)
@@ -48,26 +44,28 @@ function popularBd(escolas){
   //populaCidade(escolas);
   //populaDistrito(escolas);
   //populaBairro(escolas);
-  //populaEndereco(escolas);
+  populaEndereco(escolas);
   //populaDiretoria(escolas);
-  populaSubprefeitura(escolas);
+  //populaSubprefeitura(escolas);
+  //populaEscola(escolas);
 };
 
-
 function populaTipo(escolas){
-  var values = []
+  var myTipo = []
   var res = []
-  for(i = 0; i < escolas.length; i++){
-    if(values.indexOf(escolas[i].tipodesc) <= 0 ){
-        values.push(escolas[i].tipodesc);
-    };
-  };
-  tipos = values.filter(function(item, pos) {
-    return values.indexOf(item) == pos ;
+
+  escolas.forEach(function(value){
+    myTipo.push([value.tipodesc]);
   });
 
-  for(i = 0; i < tipos.length; i++){
-      res.push([tipos[i]]);
+  var map = myTipo.reduce(function(prev, cur) {
+    prev[cur] = prev[cur];
+    return prev;
+  }, {});
+
+  for (var key in map) {
+      resp = key.split(',');
+      res.push(resp);
   }
 
   tiposModel.postTipo(res, connection, function(err, result){
@@ -76,19 +74,25 @@ function populaTipo(escolas){
 }
 
 function populaEstado(escolas){
-  var values = []
+
+  var myEstado = []
   var res = []
-  for(i = 0; i < escolas.length; i++){
-    if(values.indexOf(escolas[i].estado) <= 0 ){
-        values.push(escolas[i].estado);
-    };
-  };
-  estados = values.filter(function(item, pos) {
-    return values.indexOf(item) == pos ;
+
+  escolas.forEach(function(value){
+    myEstado.push([value.estado]);
   });
-  for(i = 0; i < estados.length; i++){
-      res.push([estados[i]]);
+
+  var map = myEstado.reduce(function(prev, cur) {
+    prev[cur] = prev[cur];
+    return prev;
+  }, {});
+
+
+  for (var key in map) {
+      resp = key.split(',');
+      res.push(resp);
   }
+
   estadosModel.postEstado(res, connection, function(err, result){
     console.log(result);
   });
@@ -96,68 +100,47 @@ function populaEstado(escolas){
 
 function populaCidade(escolas){
 
-  var cidades = []
+  var myCidades = []
   var res = []
-  var resultado = []
-  var estados = []
 
-  for(i = 0; i < escolas.length; i++){
-      cidades.push(escolas[i].cidade,escolas[i].estado);
-  };
-
-  cidadesUnique = cidades.filter(function(item, pos) {
-    return cidades.indexOf(item) == pos;
+  escolas.forEach(function(value){
+    myCidades.push([value.cidade,value.estado]);
   });
 
-  var map = cidadesUnique.reduce(function(prev, cur) {
+  var map = myCidades.reduce(function(prev, cur) {
       prev[cur] = prev[cur];
       return prev;
     }, {});
 
-
   for (var key in map) {
-      cid = key.split(',');
-      if(cid[0] != '' && cid[1] != ''){
-         res.push(cid);
-      }
+    resp = key.split(',');
+    res.push(resp);
   }
 
-  for(var i = 0; i < res.length; i = i + 2){
-      resultado.push(res[i].concat(res[i + 1]));
-  }
-
-  resultado.forEach(function(value){
+  res.forEach(function(value){
     cidadesModel.postCidadeDescEstado(value, connection, function(err, result){
-        console.log(result);
+      console.log(result);
     });
   });
-
 }
 
 function populaDistrito(escolas){
 
-  var distrito = []
-  var cidade = []
+  var myDistrito = []
   var res = []
 
-  for(i = 0; i < escolas.length; i++){
-    distrito.push([escolas[i].distrito,escolas[i].cidade]);
-  };
-
-  distritoUnique = distrito.filter(function(item, pos) {
-    return distrito.indexOf(item) == pos;
+  escolas.forEach(function(value){
+    myDistrito.push([value.distrito,value.cidade]);
   });
 
-  var map = distritoUnique.reduce(function(prev, cur) {
+  var map = myDistrito.reduce(function(prev, cur) {
     prev[cur] = prev[cur];
     return prev;
   }, {});
 
  for (var key in map) {
-   dist = key.split(',');
-   if(dist[0] != '' && dist[1] != ''){
-     res.push(dist);
-   }
+   resp = key.split(',');
+   res.push(resp);
  }
 
  res.forEach(function(value){
@@ -165,32 +148,25 @@ function populaDistrito(escolas){
        console.log(result);
    });
  });
-
 }
 
 function populaBairro(escolas){
 
-  var bairro = []
+  var myBairro = []
   var res = []
 
-  for(i = 0; i < escolas.length; i++){
-    bairro.push([escolas[i].bairro,escolas[i].distrito]);
-  };
-
-  bairroUnique = bairro.filter(function(item, pos) {
-    return bairro.indexOf(item) == pos;
+  escolas.forEach(function(value){
+    myBairro.push([value.bairro,value.distrito]);
   });
 
-  var map = bairroUnique.reduce(function(prev, cur) {
+  var map = myBairro.reduce(function(prev, cur) {
     prev[cur] = prev[cur];
     return prev;
   }, {});
 
   for (var key in map) {
-    dist = key.split(',');
-    if(dist[0] != '' && dist[1] != ''){
-      res.push(dist);
-    }
+    resp = key.split(',');
+    res.push(resp);
   }
 
   res.forEach(function(value){
@@ -198,7 +174,6 @@ function populaBairro(escolas){
         console.log(result);
     });
   });
-
 }
 
 function populaEndereco(escolas){
@@ -206,45 +181,50 @@ function populaEndereco(escolas){
   var endereco = []
   var res = []
 
-  for(i = 0; i < escolas.length; i++){
-    endereco.push([escolas[i].endereco,escolas[i].numero,escolas[i].cep,escolas[i].bairro,escolas[i].distrito,escolas[i].cidade,escolas[i].estado,escolas[i].latitude,escolas[i].longitude]);
-  };
-
-  enderecoUnique = endereco.filter(function(item, pos) {
-    return endereco.indexOf(item) == pos;
+  escolas.forEach(function(value){
+    endereco.push([
+        value.endereco,
+        value.numero,
+        value.cep,
+        value.bairro,
+        value.distrito,
+        value.cidade,
+        value.estado,
+        value.latitude,
+        value.longitude
+      ]);
   });
 
-  var map = enderecoUnique.reduce(function(prev, cur) {
+  var map = endereco.reduce(function(prev, cur) {
     prev[cur] = prev[cur];
     return prev;
   }, {});
 
   for (var key in map) {
-    dist = key.split(',');
-    if(dist[0] != '' && dist[1] != ''){
-      res.push(dist);
-    }
+    resp = key.split(',');
+    res.push(resp);
   }
 
-  //console.log(res);
-  res.forEach(function(value){
-    enderecosModel.postEnderecoByDescriptions(value, connection, function(err, result){
-        console.log(result);
-    });
-  });
+  console.log(res);
+
+  //res.forEach(function(value){
+    //enderecosModel.postEnderecoByDescriptions(value, connection, function(err, result){
+      //console.log(result);
+    //});
+  //});
 
 }
 
 function populaDiretoria(escolas){
 
-  var diretoria = []
+  var myDiretoria = []
   var res = []
 
-  for(i = 0; i < escolas.length; i++){
-    diretoria.push([escolas[i].diretoria]);
-  };
+  escolas.forEach(function(value){
+    myDiretoria.push([value.diretoria]);
+  });
 
-  var map = diretoria.reduce(function(prev, cur) {
+  var map = myDiretoria.reduce(function(prev, cur) {
     prev[cur] = prev[cur];
     return prev;
   }, {});
@@ -266,31 +246,99 @@ function populaDiretoria(escolas){
 
 function populaSubprefeitura(escolas){
 
-  var subprefeitura = []
+  var mySubprefeitura = []
   var res = []
 
-  for(i = 0; i < escolas.length; i++){
-    subprefeitura.push([escolas[i].subpref]);
-  };
+  escolas.forEach(function(value){
+    mySubprefeitura.push([value.subpref]);
+  });
 
-  var map = subprefeitura.reduce(function(prev, cur) {
+  var map = mySubprefeitura.reduce(function(prev, cur) {
+    prev[cur] = prev[cur];
+    return prev;
+  }, {});
+
+  for (var key in map) {
+    resp = key.split(',');
+    res.push(resp);
+  }
+
+  res.forEach(function(value){
+    subprefeiturasModel.postSubprefeituraOnlyDesc(value, connection, function(err, result){
+        console.log(result);
+    });
+  });
+
+}
+
+function populaEscola(escolas){
+  var myEscola = []
+  var res = []
+
+  escolas.forEach(function(value){
+    myEscola.push([
+        value.nomesc,
+        '',
+        value.tel1,
+        value.tel2,
+        value.tipodesc,
+        value.diretoria,
+        value.subpref,
+        value.endereco,
+        value.bairro,
+        value.distrito,
+        value.cidade,
+        value.estado,
+        value.cep
+      ]);
+  });
+
+  var map = myEscola.reduce(function(prev, cur) {
     prev[cur] = prev[cur];
     return prev;
   }, {});
 
   for (var key in map) {
     dist = key.split(',');
-    if(dist[0] != '' && dist[1] != ''){
+    if(dist[0]){
       res.push(dist);
     }
   }
-
+  //console.log(res);
   res.forEach(function(value){
-    subprefeiturasModel.postSubprefeituraOnlyDesc(value[0], connection, function(err, result){
+    escolasModel.postEscolaByDescriptions(value, connection, function(err, result){
         console.log(result);
     });
   });
+}
 
+function verifyOk(data){
+
+  if(!ifOk(data.endereco)){
+    return false
+  }
+  if(!ifOk(data.bairro)){
+    return false
+  }
+  if(!ifOk(data.cep)){
+    return false
+  }
+  if(!ifOk(data.distrito)){
+    return false
+  }
+  if(!ifOk(data.cidade)){
+    return false
+  }
+
+  function ifOk(value){
+    if(value == null || value == '' || value == null){
+      return false
+    }else{
+      return true
+    }
+  }
+
+  return true;
 }
 
 function parse(data){
