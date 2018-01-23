@@ -22,11 +22,14 @@ var limit = 10;
 var escolas = [];
 var tipo = []
 
+console.log(cvsPath);
+
 csv()
   .fromFile(csvFilePath)
   .on('csv', (csvRow)=>{
       // Converte a linha em um Array
       var data = csvRow[0].toString().replace(',' , '.').split(";");
+
       var escola = parse(data)
       if(verifyOk(escola)){
         escolas[contador] = escola;
@@ -175,6 +178,7 @@ function populaBairro(escolas){
     });
   });
 }
+
 
 function populaEndereco(escolas){
 

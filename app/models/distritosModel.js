@@ -2,7 +2,7 @@ module.exports = function(){
 
   //Pegar todos os distritos
   this.getDistritos = function(connection, callback){
-    connection.query('select DISTRITOS.DESCRICAO as DESCRICAO, CIDADES.DESCRICAO as CIDADE from DISTRITOS inner join CIDADES on (DISTRITOS.CIDADE_ID =  CIDADES.ID  ) ;', callback);
+    connection.query('select DISTRITOS.ID as ID, DISTRITOS.DESCRICAO as DESCRICAO, CIDADES.ID as CIDADADE_ID, CIDADES.DESCRICAO as CIDADE from DISTRITOS inner join CIDADES on (DISTRITOS.CIDADE_ID =  CIDADES.ID  ) ;', callback);
   };
 
   //Pegar Distritos por ID
