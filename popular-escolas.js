@@ -159,7 +159,7 @@ function populaBairro(escolas){
   var res = []
 
   escolas.forEach(function(value){
-    myBairro.push([value.bairro,value.distrito]);
+    myBairro.push([value.bairro,value.distrito,value.cidade,value.estado]);
   });
 
   var map = myBairro.reduce(function(prev, cur) {
@@ -189,13 +189,16 @@ function populaEndereco(escolas){
     endereco.push([
         value.endereco,
         value.numero,
+        value.complemento,
         value.cep,
         value.bairro,
         value.distrito,
         value.cidade,
         value.estado,
-        value.latitude,
-        value.longitude
+        //value.latitude,
+        //value.longitude
+        0,
+        0
       ]);
   });
 
@@ -209,13 +212,12 @@ function populaEndereco(escolas){
     res.push(resp);
   }
 
-  console.log(res);
+  res.forEach(function(value){
+    enderecosModel.postEnderecoByDescriptions(value, connection, function(err, result){
+      console.log(result);
+    });
+  });
 
-  //res.forEach(function(value){
-    //enderecosModel.postEnderecoByDescriptions(value, connection, function(err, result){
-      //console.log(result);
-    //});
-  //});
 
 }
 
@@ -308,7 +310,7 @@ function populaEscola(escolas){
       res.push(dist);
     }
   }
-  //console.log(res);
+
   res.forEach(function(value){
     escolasModel.postEscolaByDescriptions(value, connection, function(err, result){
         console.log(result);
@@ -346,7 +348,7 @@ function verifyOk(data){
 }
 
 function parse(data){
-  var result = '{ "tipodesc" : null, "nomesc" : null, "diretoria" : null, "subpref" : null, "ceu" : null, "endereco" : null, "numero" : null, "bairro" : null, "cep" : null, "tel1" : null, "tel2" : null, "situacao" : null, "distrito" : null, "latitude" : null, "longitude" : null, "cidade" : null, "estado" : null }';
+  var result = '{ "tipodesc" : null, "nomesc" : null, "diretoria" : null, "subpref" : null, "ceu" : null, "endereco" : null, "numero" : null, "bairro" : null, "cep" : null, "tel1" : null, "tel2" : null, "situacao" : null, "distrito" : null, "latitude" : null, "longitude" : null, "cidade" : null, "estado" : null, "complemento" : null, "ddd" : null }';
   var resultJson = JSON.parse(result);
 
   resultJson.tipodesc = data[0];
@@ -366,6 +368,7 @@ function parse(data){
   resultJson.longitude = data[14];
   resultJson.cidade = data[15];
   resultJson.estado = data[16];
+  resultJson.complemento = data[19];
 
   return resultJson
 }

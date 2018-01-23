@@ -16,24 +16,23 @@ module.exports = function(){
   };
 
   //Inserir Endereço
-  this.postEnderecoByDescriptions = function(escola , connection, callback){
+  this.postEnderecoByDescriptions = function(endereco , connection, callback){
 
-      var endereco = escola[0];
-      var numero = escola[1];
-      if(escola[1] == 'S/N'){
-        numero = -1
-      }
-      var cep = escola[2];
-      var bairro = escola[3];
-      var distrito = escola[4];
-      var cidade = escola[5];
-      var estado = escola[6];
-      var latitude = parseFloat(escola[7].toString().substring(3, 0) +'.'+ escola[7].toString().substring(4, escola[7].toString().length));
-      var longitude = parseFloat(escola[8].toString().substring(3, 0) +'.'+ escola[7].toString().substring(4, escola[8].toString().length));
+      var longitude = parseFloat(endereco[9]);
+      var latitude = parseFloat(endereco[8]);
+      var estado = endereco[7];
+      var cidade = endereco[6];
+      var distrito = endereco[5];
+      var bairro = endereco[4];
+      var cep = endereco[3];
+      var complemento = endereco[2];
+      var numero = endereco[1];
+      var endereco = endereco[0];
 
       var query = `insert into ENDERECOS (
                       ENDERECO,
                       NUMERO,
+                      COMPLEMENTO,
                       CEP,
                       BAIRRO_ID,
                       DISTRITO_ID,
@@ -45,6 +44,7 @@ module.exports = function(){
                    select
                       "${endereco}" as ENDERECO,
                       "${numero}" as NUMERO,
+                      "${complemento}" as COMPLEMENTO,
                       "${cep}" as CEP,
                       B.ID as BAIRRO_ID,
                       D.ID as DISTRITO_ID,
@@ -61,7 +61,10 @@ module.exports = function(){
                       and D.DESCRICAO = "${distrito}"
                       and C.DESCRICAO = "${cidade}"
                       and E.DESCRICAO = "${estado}"`
-      connection.query(query, callback);
+
+      console.log(query);
+      //connection.query(query, callback);
+
   };
 
   return this;
