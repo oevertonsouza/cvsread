@@ -20,42 +20,39 @@ module.exports = function(){
 
       var nome = escola[0];
       var email = escola[1];
-      var telefone1 = escola[2];
-      if(!telefone1 == '' || !telefone1 == undefined  ){
-          telefone1 = '11' + telefone1;
-      }
-      var telefone2 = escola[3];
-      if(!telefone2 == '' || !telefone2 == undefined  ){
-          telefone2 = '11' + telefone1;
-      }
-      var tipo = escola[4];
-      var diretoria = escola[5];
-      var subprefeitura = escola[6];
-      var endereco = escola[7];
-      var bairro = escola[8];
-      var distrito = escola[9];
-      var cidade = escola[10];
-      var estado = escola[11];
-      var cep = escola[12];
+      var ddd = escola[2];
+      var telefone1 = escola[3];
+      var telefone2 = escola[4];
+      var tipo = escola[5];
+      var diretoria = escola[6];
+      var depadm = escola[7];
+      var endereco = escola[8];
+      var bairro = escola[9];
+      var distrito = escola[10];
+      var cidade = escola[11];
+      var estado = escola[12];
+      var cep = escola[13];
 
       var query = `insert into ESCOLAS (
                       NOME,
                       EMAIL,
+                      DDD,
                       TELEFONE1,
                       TELEFONE2,
                       TIPO_ID,
                       DIRETORIA_ID,
-                      SUBPREFEITURA_ID,
+                      DEPADM_ID,
                       ENDERECO_ID
                    )
                    select
                       "${nome}" as NOME,
                       "${email}" as EMAIL,
+                      "${ddd}" as DDD,
                       "${telefone1}" as TELEFONE1,
                       "${telefone2}" as TELEFONE2,
                       (select ID from TIPOS where DESCRICAO = "${tipo}") as TIPO_ID,
                       (select ID from DIRETORIAS where DESCRICAO = "${diretoria}") as DIRETORIA_ID,
-                      (select ID from SUBPREFEITURAS where DESCRICAO = "${subprefeitura}") as SUBPREFEITURA_ID,
+                      (select ID from DEPADMS where DESCRICAO = "${depadm}") as DEPADM_ID,
                       (select
                           E.ID
                         from
@@ -72,9 +69,9 @@ module.exports = function(){
                           and C.DESCRICAO = "${cidade}"
                           and ES.DESCRICAO = "${estado}"
                         ) as ENDERECO_ID
-                    `
-      console.log(query);
-      //connection.query(query, callback);
+                      `
+      //console.log(query);
+      connection.query(query, callback);
   };
 
   return this;

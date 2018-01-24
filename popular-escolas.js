@@ -8,8 +8,8 @@ var cidadesModel = app.app.models.cidadesModel;
 var distitosModel = app.app.models.distritosModel;
 var bairrosModel = app.app.models.bairrosModel;
 var enderecosModel = app.app.models.enderecosModel;
+var depadmsModel = app.app.models.depadmsModel;
 var diretoriasModel = app.app.models.diretoriasModel;
-var subprefeiturasModel = app.app.models.subprefeiturasModel;
 var escolasModel = app.app.models.escolasModel;
 
 var connection = app.config.dbConnection();
@@ -40,17 +40,16 @@ csv()
       popularBd(escolas)
 });
 
-
 function popularBd(escolas){
-  //populaTipo(escolas);
-  //populaEstado(escolas);
-  //populaCidade(escolas);
-  //populaDistrito(escolas);
-  //populaBairro(escolas);
+  populaTipo(escolas);
+  populaEstado(escolas);
+  populaCidade(escolas);
+  populaDistrito(escolas);
+  populaBairro(escolas);
   populaEndereco(escolas);
-  //populaDiretoria(escolas);
-  //populaSubprefeitura(escolas);
-  //populaEscola(escolas);
+  populaDiretoria(escolas);
+  populaDepadm(escolas);
+  populaEscola(escolas);
 };
 
 function populaTipo(escolas){
@@ -179,7 +178,6 @@ function populaBairro(escolas){
   });
 }
 
-
 function populaEndereco(escolas){
 
   var endereco = []
@@ -237,41 +235,39 @@ function populaDiretoria(escolas){
 
   for (var key in map) {
     dist = key.split(',');
-    if(dist[0] != '' && dist[1] != ''){
-      res.push(dist);
-    }
+    res.push(dist);
   }
 
   res.forEach(function(value){
     diretoriasModel.postDiretoriaOnlyDesc(value[0], connection, function(err, result){
-        console.log(result);
+      console.log(result);
     });
   });
 
 }
 
-function populaSubprefeitura(escolas){
+function populaDepadm(escolas){
 
-  var mySubprefeitura = []
+  var myDiretoria = []
   var res = []
 
   escolas.forEach(function(value){
-    mySubprefeitura.push([value.subpref]);
+    myDiretoria.push([value.depadm]);
   });
 
-  var map = mySubprefeitura.reduce(function(prev, cur) {
+  var map = myDiretoria.reduce(function(prev, cur) {
     prev[cur] = prev[cur];
     return prev;
   }, {});
 
   for (var key in map) {
-    resp = key.split(',');
-    res.push(resp);
+    dist = key.split(',');
+    res.push(dist);
   }
 
   res.forEach(function(value){
-    subprefeiturasModel.postSubprefeituraOnlyDesc(value, connection, function(err, result){
-        console.log(result);
+    depadmsModel.postDepadmOnlyDesc(value[0], connection, function(err, result){
+      console.log(result);
     });
   });
 
@@ -284,12 +280,13 @@ function populaEscola(escolas){
   escolas.forEach(function(value){
     myEscola.push([
         value.nomesc,
-        '',
+        value.email,
+        value.ddd,
         value.tel1,
         value.tel2,
         value.tipodesc,
         value.diretoria,
-        value.subpref,
+        value.depadm,
         value.endereco,
         value.bairro,
         value.distrito,
@@ -306,14 +303,12 @@ function populaEscola(escolas){
 
   for (var key in map) {
     dist = key.split(',');
-    if(dist[0]){
-      res.push(dist);
-    }
+    res.push(dist);
   }
 
   res.forEach(function(value){
     escolasModel.postEscolaByDescriptions(value, connection, function(err, result){
-        console.log(result);
+      console.log(result);
     });
   });
 }
@@ -326,18 +321,14 @@ function verifyOk(data){
   if(!ifOk(data.bairro)){
     return false
   }
-  if(!ifOk(data.cep)){
-    return false
-  }
   if(!ifOk(data.distrito)){
     return false
   }
   if(!ifOk(data.cidade)){
     return false
   }
-
   function ifOk(value){
-    if(value == null || value == '' || value == null){
+    if(value == undefined){
       return false
     }else{
       return true
@@ -348,27 +339,47 @@ function verifyOk(data){
 }
 
 function parse(data){
-  var result = '{ "tipodesc" : null, "nomesc" : null, "diretoria" : null, "subpref" : null, "ceu" : null, "endereco" : null, "numero" : null, "bairro" : null, "cep" : null, "tel1" : null, "tel2" : null, "situacao" : null, "distrito" : null, "latitude" : null, "longitude" : null, "cidade" : null, "estado" : null, "complemento" : null, "ddd" : null }';
+  var result = '{ "tipodesc" : null, "nomesc" : null, "diretoria" : null, "depadm" : null, "ceu" : null, "endereco" : null, "numero" : null, "bairro" : null, "cep" : null, "tel1" : null, "tel2" : null, "situacao" : null, "distrito" : null, "latitude" : null, "longitude" : null, "cidade" : null, "estado" : null, "complemento" : null, "ddd" : null, "email" : null }';
   var resultJson = JSON.parse(result);
 
-  resultJson.tipodesc = data[0];
-  resultJson.nomesc = data[1];
-  resultJson.diretoria = data[2];
-  resultJson.subpref = data[3];
-  resultJson.ceu = data[4];
-  resultJson.endereco = data[5];
-  resultJson.numero = data[6];
-  resultJson.bairro = data[7];
-  resultJson.cep = data[8];
-  resultJson.tel1 = data[9];
-  resultJson.tel2 = data[10];
-  resultJson.situacao = data[11];
-  resultJson.distrito = data[12];
-  resultJson.latitude = data[13];
-  resultJson.longitude = data[14];
-  resultJson.cidade = data[15];
-  resultJson.estado = data[16];
-  resultJson.complemento = data[19];
+  resultJson.tipodesc = removeAccents(data[0]);
+  resultJson.nomesc = removeAccents(data[1]);
+  resultJson.diretoria = removeAccents(data[2]);
+  resultJson.depadm = removeAccents(data[3]);
+  resultJson.ceu = removeAccents(data[4]);
+  resultJson.endereco = removeAccents(data[5]);
+  resultJson.numero = removeAccents(data[6]);
+  resultJson.bairro = removeAccents(data[7]);
+  resultJson.cep = removeAccents(data[8]);
+  resultJson.tel1 = removeAccents(data[9]);
+  resultJson.tel2 = removeAccents(data[10]);
+  resultJson.situacao = removeAccents(data[11]);
+  resultJson.distrito = removeAccents(data[12]);
+  resultJson.latitude = removeAccents(data[13]);
+  resultJson.longitude = removeAccents(data[14]);
+  resultJson.cidade = removeAccents(data[15]);
+  resultJson.estado = removeAccents(data[16]);
+  resultJson.ddd = removeAccents(data[17]);
+  resultJson.email = removeAccents(data[18]).toLowerCase();
+  resultJson.complemento = removeAccents(data[19]);
+
+
+  function removeAccents(str) {
+    var accents    = 'ÀÁÂÃÄÅàáâãäåßÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+    var accentsOut = "AAAAAAaaaaaaBOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+    if (!str) {
+      str = '';
+    }
+    str = str.toString().split('');
+    var strLen = str.length;
+    var i, x;
+    for (i = 0; i < strLen; i++) {
+      if ((x = accents.indexOf(str[i])) != -1) {
+        str[i] = accentsOut[x];
+      }
+    }
+    return str.join('');
+  }
 
   return resultJson
 }

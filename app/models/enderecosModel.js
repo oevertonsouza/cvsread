@@ -62,8 +62,8 @@ module.exports = function(){
                       and C.DESCRICAO = "${cidade}"
                       and E.DESCRICAO = "${estado}"`
 
-      console.log(query);
-      //connection.query(query, callback);
+      //console.log(query);
+      connection.query(query, callback);
 
   };
 
