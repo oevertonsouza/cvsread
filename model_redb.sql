@@ -89,6 +89,24 @@ CREATE TABLE ESCOLAS (
     FOREIGN KEY (ENDERECO_ID) REFERENCES ENDERECOS (ID)
 );
 
+CREATE TABLE USUARIOS (
+    ID int(11) NOT NULL AUTO_INCREMENT,
+    USERNAME varchar(100) NOT NULL,
+    EMAIL varchar(100)  NOT NULL,
+    PASSWORD varchar(15) NOT NULL,
+    DT_CRIACAO datetime NOT NULL,
+    DT_MODIFICADO datetime NOT NULL,
+    PREMIUM  BOOLEAN DEFAULT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE ACESSO (
+    USUARIO_ID int(11) NOT NULL,
+    UUID VARCHAR(36) DEFAULT NULL,
+    ULTIMOACESSO datetime NOT NULL,
+    FOREIGN KEY (USUARIO_ID) REFERENCES USUARIOS (ID)
+);
+
 /*
   SELECT table_schema                                        "DB Name",
     Round(Sum(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB"
