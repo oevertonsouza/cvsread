@@ -1,6 +1,5 @@
 module.exports = function(application) {
   const uuidv4 = require('uuid/v4');
-
   //post
   application.post('/login', function(req, res){
 
@@ -20,46 +19,34 @@ module.exports = function(application) {
 
     usuariosModel.getUsuarios(email, connection, function(error, result){
       if (error) {
-        console.log(erro);
         res.send({
           "code":400,
           "failed":"error ocurred"
         })
       }else{
-        if(result.length > 0){
-          if(result[0].PASSWORD == password){
+        if((result.length > 0) && (result[0].PASSWORD == password)){
             acesso.usuario_id = result[0].ID;
             acessoModel.postAcesso(acesso, connection, function(error, result){
               if(error){
                 res.send({
                   "code":400,
-                  "failed":"erro ao controlar acesso"
+                  "failed":"error ocurred"
                 });
               }else{
                 res.send({
                   "code":200,
-                  "success":"login sucessfull with Access"
+                  "success":"login sucessfull with Access",
+                  "accessId" : acesso.uuid
                 });
               }
             });
-            res.send({
-              "code":200,
-              "success":"login sucessfull"
-            });
-          }
-          else{
+          }else{
             res.send({
               "code":204,
-              "success":"Email and password does not match"
+              "success":"Falha ao efetuar login"
             });
           }
-        }else{
-          res.send({
-            "code":204,
-            "success":"Email does not exits"
-          });
         }
-      }
     });
   });
 }
