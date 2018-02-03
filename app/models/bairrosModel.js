@@ -11,8 +11,8 @@ module.exports = function(){
   };
 
   //Pegar Bairro por ID
-  this.getBairroByDescription = function(descricao, connection, callback){
-    connection.query(`select ID from BAIRROS where DESCRICAO = "${descricao}";`, callback);
+  this.getBairroByDescricao = function(descricao, connection, callback){
+    connection.query(`select * from BAIRROS where DESCRICAO = "${descricao}";`, callback);
   };
 
   //Inserir Bairro com ID do estado

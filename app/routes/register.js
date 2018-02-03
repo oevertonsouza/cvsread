@@ -15,19 +15,29 @@ module.exports = function(application) {
       "premium": false
     }
 
-    usuariosModel.postUsuarios(user, connection, function(error, result){
-      //res.send(result);
-      if (error) {
-        console.log("error ocurred", error);
+    usuariosModel.getUsuarios(user.email, connection, function(error, result ){
+
+
+      if ((result.length > 0) && (result[0].EMAIL = user.email)) {
         res.send({
-          "code":400,
-          "failed":"error ocurred"
-        })
+          "code":202,
+          "warning":"Email já cadastrado."
+        });
       }else{
-        console.log('The solution is: ', result);
-        res.send({
-          "code":200,
-          "success":"user registered sucessfully"
+        usuariosModel.postUsuarios(user, connection, function(error, result){
+          if (error) {
+            console.log("error ocurred", error);
+            res.send({
+              "code":400,
+              "failed":"error ocurred"
+            })
+          }else{
+            console.log('The solution is: ', result);
+            res.send({
+              "code":200,
+              "success":"Usuário registrado com sucesso."
+            });
+          }
         });
       }
     });

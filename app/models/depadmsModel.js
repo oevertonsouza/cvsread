@@ -12,7 +12,7 @@ module.exports = function(){
 
   //Pegar Depadm por Descriçao
   this.getgetDepadmByDescription = function(descricao, connection, callback){
-    connection.query(`select ID from DEPADMS where DESCRICAO = "${descricao}";`, callback);
+    connection.query(`select * from DEPADMS where DESCRICAO = "${descricao}";`, callback);
   };
 
   //Inserir Depadm
