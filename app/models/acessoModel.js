@@ -17,6 +17,5 @@ module.exports = function(){
     connection.query(query ,callback);
   };
 
-
   return this;
 }

@@ -39,7 +39,8 @@ module.exports = function(application) {
                 res.send({
                   "code":200,
                   "success":"Login efetuado com sucesso!",
-                  "accessId" : acesso.uuid
+                  "accessId":acesso.uuid,
+                  "userId": acesso.usuario_id
                 });
               }
             });
