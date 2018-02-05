@@ -12,6 +12,7 @@ module.exports = function(){
                         E.ENDERECO,
                         E.NUMERO,
                         E.COMPLEMENTO,
+                        E.CEP,
                         B.DESCRICAO as BAIRRO,
                         D.DESCRICAO as DISTRITO
                       from ESCOLAS ES
@@ -23,7 +24,6 @@ module.exports = function(){
 
   //Pegar Escolas por ID
   this.getEscolaById = function(id, connection, callback){
-    console.log(id);
     connection.query(`select
                         ES.ID,
                         ES.NOME,
@@ -33,6 +33,7 @@ module.exports = function(){
                         ES.EMAIL,
                         E.ENDERECO,
                         E.NUMERO,
+                        E.CEP,
                         E.COMPLEMENTO,
                         B.DESCRICAO as BAIRRO,
                         D.DESCRICAO as DISTRITO,
