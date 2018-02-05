@@ -3,13 +3,14 @@ module.exports = function(application) {
   //post
   application.post('/login', function(req, res){
 
+    var md5 = require('md5');
     var connection = application.config.dbConnection();
     var usuariosModel = application.app.models.usuariosModel;
     var acessoModel = application.app.models.acessoModel;
 
     var today = new Date();
     var email= req.body.email;
-    var password = req.body.password;
+    var password = md5(req.body.password);
 
     var acesso = {
       usuario_id : '',
@@ -24,7 +25,7 @@ module.exports = function(application) {
           "failed":"error ocurred"
         })
       }else{
-        if((result.length > 0) && (result[0].PASSWORD == password)){
+        if((result) && (result.length > 0) && (result[0].PASSWORD == password)){
             acesso.usuario_id = result[0].ID;
             acessoModel.postAcesso(acesso, connection, function(error, result){
               if(error){
@@ -35,7 +36,7 @@ module.exports = function(application) {
               }else{
                 res.send({
                   "code":200,
-                  "success":"login sucessfull with Access",
+                  "success":"Login efetuado com sucesso!",
                   "accessId" : acesso.uuid
                 });
               }
