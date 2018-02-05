@@ -4,10 +4,30 @@ module.exports = function(application) {
 
     var connection = application.config.dbConnection();
     var estadosModel = application.app.models.estadosModel;
+    var acessoModel = application.app.models.acessoModel;
 
-      estadosModel.getEstados(connection, function(err, result){
-        res.send(result);
-      });
+    acessoModel.getAcessoByUuid(req.query.key,connection, function(err, result){
+      if((result.length > 0) && (req.query.key = result[0].UUID)){
+        if(req.query.id)
+        {
+          estadosModel.getEstadoById(req.query.id, connection, function(err, result){
+            res.send(result);
+          });
+        }else if(req.query.desc){
+          estadosModel.getEstadoByDescription(req.query.desc, connection, function(err, result){
+            res.send(result);
+          });
+        }else{
+          estadosModel.getEstados(connection, function(err, result){
+            res.send(result);
+          });
+        }
+      }else{
+        res.send({
+          "code":202,
+          "failed":"Chave inválida"
+        })
+      }
+    });
   });
-
 };

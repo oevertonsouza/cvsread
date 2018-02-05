@@ -6,12 +6,12 @@ module.exports = function(){
   };
 
   //Pegar Depadms por ID
-  this.getgetDepadmById = function(id, connection, callback){
+  this.getDepadmById = function(id, connection, callback){
     connection.query(`select * from DEPADMS where ID = ${id};`, callback);
   };
 
   //Pegar Depadm por Descriçao
-  this.getgetDepadmByDescription = function(descricao, connection, callback){
+  this.getDepadmByDescription = function(descricao, connection, callback){
     connection.query(`select * from DEPADMS where DESCRICAO = "${descricao}";`, callback);
   };
 

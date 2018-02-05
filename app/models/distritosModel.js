@@ -7,7 +7,21 @@ module.exports = function(){
 
   //Pegar Distritos por ID
   this.getDistritoById = function(id, connection, callback){
-    connection.query(`select * from DISTRITOS where ID = ${id};`, callback);
+    var query = `
+      select
+        D.ID,
+        D.DESCRICAO as DISTRITO,
+        D.CIDADE_ID,
+        C.DESCRICAO as CIDADE,
+        C.ESTADO_ID,
+        E.DESCRICAO as ESTADO
+      from DISTRITOS D
+        inner join CIDADES C on (D.CIDADE_ID = C.ID)
+        inner join ESTADOS E on (C.ESTADO_ID = E.ID)
+      where D.ID = ${id};
+    `;
+    console.log(query);
+    connection.query(query, callback);
   };
 
   //Pegar Distrito por ID

@@ -1,24 +1,24 @@
 module.exports = function(application) {
   //get
-  application.get('/escolas', function(req, res){
+  application.get('/depadms', function(req, res){
 
     var connection = application.config.dbConnection();
-    var escolasModel = application.app.models.escolasModel;
+    var depadmsModel = application.app.models.depadmsModel;
     var acessoModel = application.app.models.acessoModel;
 
     acessoModel.getAcessoByUuid(req.query.key,connection, function(err, result){
       if((result.length > 0) && (req.query.key = result[0].UUID)){
         if(req.query.id)
         {
-          escolasModel.getEscolaById(req.query.id, connection, function(err, result){
+          depadmsModel.getDepadmById(req.query.id, connection, function(err, result){
             res.send(result);
           });
         }else if(req.query.desc){
-          escolasModel.getEscolaByDescription(req.query.desc, connection, function(err, result){
+          depadmsModel.getDepadmByDescription(req.query.desc, connection, function(err, result){
             res.send(result);
           });
         }else{
-          escolasModel.getEscolas(connection, function(err, result){
+          depadmsModel.getDepadms(connection, function(err, result){
             res.send(result);
           });
         }
@@ -28,6 +28,7 @@ module.exports = function(application) {
           "failed":"Chave inválida"
         });
       }
-    });
+    })
   });
+
 };
