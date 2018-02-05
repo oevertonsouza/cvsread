@@ -3,14 +3,14 @@ module.exports = function(application) {
   //post
   application.post('/login', function(req, res){
 
-    var md5 = require('md5');
+    var CryptoJS = require("crypto-js");
     var connection = application.config.dbConnection();
     var usuariosModel = application.app.models.usuariosModel;
     var acessoModel = application.app.models.acessoModel;
 
     var today = new Date();
     var email= req.body.email;
-    var password = md5(req.body.password);
+    var password = req.body.password;
 
     var acesso = {
       usuario_id : '',
@@ -25,7 +25,9 @@ module.exports = function(application) {
           "failed":"error ocurred"
         })
       }else{
-        if((result) && (result.length > 0) && (result[0].PASSWORD == password)){
+        var bytes  = CryptoJS.AES.decrypt(result[0].PASSWORD, 'CHAVE');
+        var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+        if((result) && (result.length > 0) && (plaintext == password)){
             acesso.usuario_id = result[0].ID;
             acessoModel.postAcesso(acesso, connection, function(error, result){
               if(error){

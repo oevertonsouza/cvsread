@@ -2,12 +2,13 @@ module.exports = function(application) {
   //post
   application.post('/register', function(req, res){
 
-    var md5 = require('md5');
+    var CryptoJS = require("crypto-js");
+
     var connection = application.config.dbConnection();
     var usuariosModel = application.app.models.usuariosModel;
     var today = new Date();
 
-    var password = md5(req.body.password);
+    var password =  CryptoJS.AES.encrypt(req.body.password, "CHAVE");
 
     var user={
       "username":req.body.username,
@@ -15,7 +16,7 @@ module.exports = function(application) {
       "password": password,
       "dt_criacao":today,
       "dt_modificado":today,
-      "ativo" : false,
+      //"ativo" : false,
       "premium": false
     }
 
