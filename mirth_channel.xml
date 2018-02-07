@@ -1,0 +1,1232 @@
+<channel version="3.3.1">
+  <id>dec35e0c-a936-4277-823c-ae5928e154d0</id>
+  <nextMetaDataId>4</nextMetaDataId>
+  <name>FIND-GEO_1-0-0</name>
+  <description></description>
+  <enabled>true</enabled>
+  <lastModified>
+    <time>1518011928451</time>
+    <timezone>America/Sao_Paulo</timezone>
+  </lastModified>
+  <revision>65</revision>
+  <sourceConnector version="3.3.1">
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties class="com.mirth.connect.connectors.jdbc.DatabaseReceiverProperties" version="3.3.1">
+      <pluginProperties/>
+      <pollConnectorProperties version="3.3.1">
+        <pollingType>INTERVAL</pollingType>
+        <pollOnStart>false</pollOnStart>
+        <pollingFrequency>5000</pollingFrequency>
+        <pollingHour>0</pollingHour>
+        <pollingMinute>0</pollingMinute>
+        <cronJobs/>
+        <pollConnectorPropertiesAdvanced>
+          <weekly>true</weekly>
+          <inactiveDays>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+          </inactiveDays>
+          <dayOfMonth>1</dayOfMonth>
+          <allDay>true</allDay>
+          <startingHour>8</startingHour>
+          <startingMinute>0</startingMinute>
+          <endingHour>17</endingHour>
+          <endingMinute>0</endingMinute>
+        </pollConnectorPropertiesAdvanced>
+      </pollConnectorProperties>
+      <sourceConnectorProperties version="3.3.1">
+        <responseVariable>None</responseVariable>
+        <respondAfterProcessing>true</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>false</firstResponse>
+        <resourceIds class="singleton-set">
+          <string>Default Resource</string>
+        </resourceIds>
+      </sourceConnectorProperties>
+      <driver>com.mysql.jdbc.Driver</driver>
+      <url>Nothing</url>
+      <username>Nothing</username>
+      <password>Nothing</password>
+      <select>var SQL = new java.lang.StringBuilder();
+
+SQL.append(&quot;SELECT&quot; +&quot;\r&quot;);
+SQL.append(&quot;END.ID, &quot; +&quot;\r&quot;);
+SQL.append(&quot;END.NUMERO,&quot; +&quot;\r&quot;);
+SQL.append(&quot;END.ENDERECO,&quot; +&quot;\r&quot;);
+SQL.append(&quot;C.ID as CIDADE_ID,&quot; +&quot;\r&quot;);
+SQL.append(&quot;C.DESCRICAO as CIDADE,&quot; +&quot;\r&quot;);
+SQL.append(&quot;B.ID as BAIRRO_ID,&quot; +&quot;\r&quot;);
+SQL.append(&quot;EST.DESCRICAO as ESTADO,&quot; +&quot;\r&quot;);
+SQL.append(&quot;END.CEP as CEP,&quot; +&quot;\r&quot;);
+SQL.append(&quot;&apos;BRA&apos; as PAIS&quot; +&quot;\r&quot;);
+SQL.append(&quot;FROM ENDERECOS END&quot; +&quot;\r&quot;);
+SQL.append(&quot;INNER JOIN CIDADES C on (END.CIDADE_ID = C.ID ) &quot; +&quot;\r&quot;);
+SQL.append(&quot;INNER JOIN ESTADOS EST on (END.ESTADO_ID = EST.ID ) &quot; +&quot;\r&quot;);
+SQL.append(&quot;INNER JOIN BAIRROS B on (END.BAIRRO_ID = B.ID ) &quot; +&quot;\r&quot;);
+SQL.append(&quot;WHERE 1=1&quot; +&quot;\r&quot;);
+SQL.append(&quot;AND END.NUMERO &gt; 0&quot; +&quot;\r&quot;);
+SQL.append(&quot;AND not exists (SELECT CRTL.ID  FROM CORDINATES_CRTL CRTL WHERE CRTL.ID = END.ID)&quot; +&quot;\r&quot;);
+SQL.append(&quot;order by ID desc&quot; +&quot;\r&quot;);
+SQL.append(&quot;limit 1&quot; +&quot;\r&quot;);
+
+var dbConn;
+
+try {
+
+	// String de conexão passando as variáveis instanciadas na area de scripts no menu deploy
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection($gc(&apos;sourceDbDriver&apos;),$gc(&apos;sourceDbUrl&apos;),$gc(&apos;sourceDbUsername&apos;),$gc(&apos;sourceDbPassword&apos;));
+	var resultSet = dbConn.executeCachedQuery(SQL);
+	return resultSet;
+
+} finally {
+
+	if (dbConn) {
+		dbConn.close();
+	}
+	if (SQL) {
+		delete SQL;
+	}
+}</select>
+      <update></update>
+      <useScript>true</useScript>
+      <cacheResults>true</cacheResults>
+      <keepConnectionOpen>true</keepConnectionOpen>
+      <updateMode>1</updateMode>
+      <retryCount>3</retryCount>
+      <retryInterval>10000</retryInterval>
+      <fetchSize>1000</fetchSize>
+      <encoding>DEFAULT_ENCODING</encoding>
+    </properties>
+    <transformer version="3.3.1">
+      <steps/>
+      <inboundTemplate encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8
+cmVzdWx0Lz4NCg==</inboundTemplate>
+      <outboundTemplate encoding="base64"></outboundTemplate>
+      <inboundDataType>XML</inboundDataType>
+      <outboundDataType>XML</outboundDataType>
+      <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="3.3.1">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="3.3.1">
+          <stripNamespaces>true</stripNamespaces>
+        </serializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="3.3.1">
+          <splitType>Element_Name</splitType>
+          <elementName></elementName>
+          <level>1</level>
+          <query></query>
+          <batchScript></batchScript>
+        </batchProperties>
+      </inboundProperties>
+      <outboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="3.3.1">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="3.3.1">
+          <stripNamespaces>true</stripNamespaces>
+        </serializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="3.3.1">
+          <splitType>Element_Name</splitType>
+          <elementName></elementName>
+          <level>1</level>
+          <query></query>
+          <batchScript></batchScript>
+        </batchProperties>
+      </outboundProperties>
+    </transformer>
+    <filter version="3.3.1">
+      <rules/>
+    </filter>
+    <transportName>Database Reader</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+    <waitForPrevious>true</waitForPrevious>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector version="3.3.1">
+      <metaDataId>1</metaDataId>
+      <name>Get Geolocate</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.3.1">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.3.1">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="singleton-set">
+            <string>Default Resource</string>
+          </resourceIds>
+        </destinationConnectorProperties>
+        <script>var dbConn;
+
+try{
+	var url = new java.net.URL(&quot;https&quot;, &apos;maps.googleapis.com&apos;, &apos;/maps/api/geocode/json?address=&apos;+encodeURI($c(&apos;address&apos;)+&apos;&amp;key=&apos;+$gc(&apos;key&apos;)));
+	var basicHttpParams = new Packages.org.apache.http.params.BasicHttpParams();
+
+	Packages.org.apache.http.params.HttpConnectionParams.setConnectionTimeout(basicHttpParams, 30000);
+	Packages.org.apache.http.params.HttpConnectionParams.setSoTimeout(basicHttpParams, 30000);
+
+	var httpClient = new Packages.org.apache.http.impl.client.DefaultHttpClient(basicHttpParams);
+	var requestEntity = new Packages.org.apache.http.entity.BasicHttpEntity();
+	requestEntity.setContentType(&quot;application/json&quot;);
+	requestEntity.setContentEncoding(&quot;UTF-8&quot;);
+
+	requestEntity.setContent(new java.io.ByteArrayInputStream(connectorMessage.getEncodedData().getBytes(&quot;UTF-8&quot;)));
+
+	var request = new Packages.org.apache.http.client.methods.HttpPost(url.toString());
+
+	request.addHeader(&apos;Content-Type&apos;, &quot;application/json&quot;);
+	request.setEntity(requestEntity);
+
+	var httpResponse = httpClient.execute(request);
+	var httpResponseCode = new java.lang.Integer(httpResponse.getStatusLine().getStatusCode());
+	var httpResponseContent = getHttpResponseContent(httpResponse);
+
+	if(httpResponseCode &gt;= 400){
+		throw &apos;An error occurred while trying to send message, Error: &apos; + httpResponseContent;
+	}else{
+		$gc(&apos;result&apos;, JSON.parse(httpResponseContent));
+	}
+
+}catch(e){
+	logger.debug(e)
+}
+
+function getHttpResponseContent(httpResponse){
+	if(httpResponse != null){
+		var content = &quot;&quot;;
+		var inputStream = httpResponse.getEntity().getContent();
+		var scanner = new java.util.Scanner(inputStream).useDelimiter(&quot;\\A&quot;);
+		if(scanner.hasNext()){
+			content = scanner.next();
+		}
+		scanner.close();
+		return content;
+	}
+	return &quot;&quot;;
+}</script>
+      </properties>
+      <transformer version="3.3.1">
+        <steps>
+          <step>
+            <sequenceNumber>0</sequenceNumber>
+            <name>Mapper</name>
+            <script>$c(&apos;controlCode&apos;, msg[&apos;id&apos;].toString());
+$c(&apos;cidadeId&apos;, msg[&apos;cidade_id&apos;].toString());
+$c(&apos;bairroId&apos;, msg[&apos;bairro_id&apos;].toString());</script>
+            <type>JavaScript</type>
+            <data>
+              <entry>
+                <string>Script</string>
+                <string>$c(&apos;controlCode&apos;, msg[&apos;id&apos;].toString());
+$c(&apos;cidadeId&apos;, msg[&apos;cidade_id&apos;].toString());
+$c(&apos;bairroId&apos;, msg[&apos;bairro_id&apos;].toString());</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>1</sequenceNumber>
+            <name>Normalize</name>
+            <script>$c(&apos;endereco&apos;, convert(msg[&apos;endereco&apos;].toString()));
+$c(&apos;cidade&apos;, convert(msg[&apos;cidade&apos;].toString()));
+
+function convert(value){
+	return value.split(&apos; &apos;).join(&apos;+&apos;);
+
+}</script>
+            <type>JavaScript</type>
+            <data>
+              <entry>
+                <string>Script</string>
+                <string>$c(&apos;endereco&apos;, convert(msg[&apos;endereco&apos;].toString()));
+$c(&apos;cidade&apos;, convert(msg[&apos;cidade&apos;].toString()));
+
+function convert(value){
+	return value.split(&apos; &apos;).join(&apos;+&apos;);
+
+}</string>
+              </entry>
+            </data>
+          </step>
+          <step>
+            <sequenceNumber>2</sequenceNumber>
+            <name>Agreement</name>
+            <script>$c(&apos;address&apos;, msg[&apos;numero&apos;].toString()+&apos;+&apos;+$c(&apos;endereco&apos;)+&apos;,+&apos;+$c(&apos;cidade&apos;)+&apos;,+&apos;+msg[&apos;estado&apos;].toString());</script>
+            <type>JavaScript</type>
+            <data>
+              <entry>
+                <string>Script</string>
+                <string>$c(&apos;address&apos;, msg[&apos;numero&apos;].toString()+&apos;+&apos;+$c(&apos;endereco&apos;)+&apos;,+&apos;+$c(&apos;cidade&apos;)+&apos;,+&apos;+msg[&apos;estado&apos;].toString());</string>
+              </entry>
+            </data>
+          </step>
+        </steps>
+        <inboundTemplate encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8
+cmVzdWx0Lz4NCg==</inboundTemplate>
+        <outboundTemplate encoding="base64"></outboundTemplate>
+        <inboundDataType>XML</inboundDataType>
+        <outboundDataType>JSON</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="3.3.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="3.3.1">
+            <stripNamespaces>true</stripNamespaces>
+          </serializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="3.3.1">
+            <splitType>Element_Name</splitType>
+            <elementName></elementName>
+            <level>1</level>
+            <query></query>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.3.1">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.3.1">
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.3.1">
+        <steps/>
+        <inboundDataType>JSON</inboundDataType>
+        <outboundDataType>JSON</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.3.1">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.3.1">
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.3.1">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.3.1">
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.3.1">
+        <rules/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+    <connector version="3.3.1">
+      <metaDataId>3</metaDataId>
+      <name>Confirmate</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.3.1">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.3.1">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-set">
+            <string>Default Resource</string>
+          </resourceIds>
+        </destinationConnectorProperties>
+        <script>var dbConn;
+var ps;
+
+try {
+
+	var SQL = &apos;UPDATE ENDERECOS SET LATITUDE = ?, LONGITUDE = ?, ENDERECO = ?  WHERE ID = ?&apos;;
+
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection($gc(&apos;sourceDbDriver&apos;),$gc(&apos;sourceDbUrl&apos;),$gc(&apos;sourceDbUsername&apos;),$gc(&apos;sourceDbPassword&apos;));
+	ps = dbConn.getConnection().prepareStatement(SQL);
+
+	ps.setFloat(1, $c(&apos;refLat&apos;));
+	ps.setFloat(2, $c(&apos;refLng&apos;));
+	ps.setString(3, $c(&apos;refEndereco&apos;));
+	ps.setInt(4, $c(&apos;controlCode&apos;));
+
+	if(!ps.executeUpdate()){
+		throw &apos;An error ocurrent or try insert agm data on db&apos;;
+	}
+
+} finally {
+	if (dbConn) {
+		dbConn.close();
+	}
+}
+
+var dbConn;
+
+try {
+
+	var SQL = &apos;UPDATE CIDADES SET DESCRICAO = ? WHERE ID = ?&apos;;
+
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection($gc(&apos;sourceDbDriver&apos;),$gc(&apos;sourceDbUrl&apos;),$gc(&apos;sourceDbUsername&apos;),$gc(&apos;sourceDbPassword&apos;));
+	ps = dbConn.getConnection().prepareStatement(SQL);
+
+	ps.setString(1, $c(&apos;refCidade&apos;));
+	ps.setInt(2, $c(&apos;cidadeId&apos;));
+
+	if(!ps.executeUpdate()){
+		throw &apos;An error ocurrent or try insert agm data on db&apos;;
+	}
+
+} finally {
+	if (dbConn) {
+		dbConn.close();
+	}
+}
+
+var dbConn;
+
+try {
+
+	var SQL = &apos;UPDATE BAIRROS SET DESCRICAO = ? WHERE ID = ?&apos;;
+
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection($gc(&apos;sourceDbDriver&apos;),$gc(&apos;sourceDbUrl&apos;),$gc(&apos;sourceDbUsername&apos;),$gc(&apos;sourceDbPassword&apos;));
+	ps = dbConn.getConnection().prepareStatement(SQL);
+
+	ps.setString(1, $c(&apos;refBairro&apos;));
+	ps.setInt(2, $c(&apos;bairroId&apos;));
+
+	if(!ps.executeUpdate()){
+		throw &apos;An error ocurrent or try insert agm data on db&apos;;
+	}
+
+} finally {
+	if (dbConn) {
+		dbConn.close();
+	}
+}
+
+var dbConn;
+
+try {
+
+	var SQL = &apos;INSERT INTO CORDINATES_CRTL (ID, STATUS) VALUES (?,?)&apos;;
+
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection($gc(&apos;sourceDbDriver&apos;),$gc(&apos;sourceDbUrl&apos;),$gc(&apos;sourceDbUsername&apos;),$gc(&apos;sourceDbPassword&apos;));
+	ps = dbConn.getConnection().prepareStatement(SQL);
+
+	ps.setInt(1, $c(&apos;controlCode&apos;));
+	ps.setString(2, &apos;OK&apos;);
+
+	if(!ps.executeUpdate()){
+		throw &apos;An error ocurrent or try insert agm data on db&apos;;
+	}
+
+} finally {
+	if (dbConn) {
+		dbConn.close();
+	}
+}
+</script>
+      </properties>
+      <transformer version="3.3.1">
+        <steps>
+          <step>
+            <sequenceNumber>0</sequenceNumber>
+            <name>Parse Response</name>
+            <script>tmp = $gc(&apos;result&apos;);
+
+if(tmp[&apos;status&apos;] == &apos;OK&apos;){
+
+	var refNumber = tmp[&apos;results&apos;][0][&apos;address_components&apos;][0][&apos;long_name&apos;];
+	var refEndereco = tmp[&apos;results&apos;][0][&apos;address_components&apos;][1][&apos;long_name&apos;];
+	var refBairro = tmp[&apos;results&apos;][0][&apos;address_components&apos;][2][&apos;long_name&apos;];
+	var refCidade = tmp[&apos;results&apos;][0][&apos;address_components&apos;][3][&apos;long_name&apos;];
+	var refBairro = tmp[&apos;results&apos;][0][&apos;address_components&apos;][2][&apos;long_name&apos;];
+	var refLat = tmp[&apos;results&apos;][0][&apos;geometry&apos;][&apos;location&apos;][&apos;lat&apos;];
+	var refLng = tmp[&apos;results&apos;][0][&apos;geometry&apos;][&apos;location&apos;][&apos;lng&apos;];
+
+}
+
+$c(&apos;refNumber&apos;, refNumber);
+$c(&apos;refEndereco&apos;, refEndereco);
+$c(&apos;refBairro&apos;, refBairro);
+$c(&apos;refCidade&apos;, refCidade);
+$c(&apos;refBairro&apos;, refBairro);
+$c(&apos;refLat&apos;, refLat);
+$c(&apos;refLng&apos;, refLng);</script>
+            <type>JavaScript</type>
+            <data>
+              <entry>
+                <string>Script</string>
+                <string>tmp = $gc(&apos;result&apos;);
+
+if(tmp[&apos;status&apos;] == &apos;OK&apos;){
+
+	var refNumber = tmp[&apos;results&apos;][0][&apos;address_components&apos;][0][&apos;long_name&apos;];
+	var refEndereco = tmp[&apos;results&apos;][0][&apos;address_components&apos;][1][&apos;long_name&apos;];
+	var refBairro = tmp[&apos;results&apos;][0][&apos;address_components&apos;][2][&apos;long_name&apos;];
+	var refCidade = tmp[&apos;results&apos;][0][&apos;address_components&apos;][3][&apos;long_name&apos;];
+	var refBairro = tmp[&apos;results&apos;][0][&apos;address_components&apos;][2][&apos;long_name&apos;];
+	var refLat = tmp[&apos;results&apos;][0][&apos;geometry&apos;][&apos;location&apos;][&apos;lat&apos;];
+	var refLng = tmp[&apos;results&apos;][0][&apos;geometry&apos;][&apos;location&apos;][&apos;lng&apos;];
+
+}
+
+$c(&apos;refNumber&apos;, refNumber);
+$c(&apos;refEndereco&apos;, refEndereco);
+$c(&apos;refBairro&apos;, refBairro);
+$c(&apos;refCidade&apos;, refCidade);
+$c(&apos;refBairro&apos;, refBairro);
+$c(&apos;refLat&apos;, refLat);
+$c(&apos;refLng&apos;, refLng);</string>
+              </entry>
+            </data>
+          </step>
+        </steps>
+        <inboundTemplate encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8
+cmVzdWx0Lz4NCg==</inboundTemplate>
+        <outboundTemplate encoding="base64">ewogICAicmVzdWx0cyIgOiBbCiAgICAgIHsKICAgICAgICAgImFkZHJlc3NfY29tcG9uZW50cyIg
+OiBbCiAgICAgICAgICAgIHsKICAgICAgICAgICAgICAgImxvbmdfbmFtZSIgOiAiMTM0MiIsCiAg
+ICAgICAgICAgICAgICJzaG9ydF9uYW1lIiA6ICIxMzQyIiwKICAgICAgICAgICAgICAgInR5cGVz
+IiA6IFsgInN0cmVldF9udW1iZXIiIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAg
+ICAgICAgICAgICAibG9uZ19uYW1lIiA6ICJBdmVuaWRhIGRvcyBBcm5hbGRvcyIsCiAgICAgICAg
+ICAgICAgICJzaG9ydF9uYW1lIiA6ICJBdi4gZG9zIEFybmFsZG9zIiwKICAgICAgICAgICAgICAg
+InR5cGVzIiA6IFsgInJvdXRlIiBdCiAgICAgICAgICAgIH0sCiAgICAgICAgICAgIHsKICAgICAg
+ICAgICAgICAgImxvbmdfbmFtZSIgOiAiQ2VudHJvIiwKICAgICAgICAgICAgICAgInNob3J0X25h
+bWUiIDogIkNlbnRybyIsCiAgICAgICAgICAgICAgICJ0eXBlcyIgOiBbICJwb2xpdGljYWwiLCAi
+c3VibG9jYWxpdHkiLCAic3VibG9jYWxpdHlfbGV2ZWxfMSIgXQogICAgICAgICAgICB9LAogICAg
+ICAgICAgICB7CiAgICAgICAgICAgICAgICJsb25nX25hbWUiIDogIkZlcm5hbmTDs3BvbGlzIiwK
+ICAgICAgICAgICAgICAgInNob3J0X25hbWUiIDogIkZlcm5hbmTDs3BvbGlzIiwKICAgICAgICAg
+ICAgICAgInR5cGVzIiA6IFsgImFkbWluaXN0cmF0aXZlX2FyZWFfbGV2ZWxfMiIsICJwb2xpdGlj
+YWwiIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAibG9uZ19u
+YW1lIiA6ICJTw6NvIFBhdWxvIiwKICAgICAgICAgICAgICAgInNob3J0X25hbWUiIDogIlNQIiwK
+ICAgICAgICAgICAgICAgInR5cGVzIiA6IFsgImFkbWluaXN0cmF0aXZlX2FyZWFfbGV2ZWxfMSIs
+ICJwb2xpdGljYWwiIF0KICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAg
+ICAibG9uZ19uYW1lIiA6ICJCcmF6aWwiLAogICAgICAgICAgICAgICAic2hvcnRfbmFtZSIgOiAi
+QlIiLAogICAgICAgICAgICAgICAidHlwZXMiIDogWyAiY291bnRyeSIsICJwb2xpdGljYWwiIF0K
+ICAgICAgICAgICAgfSwKICAgICAgICAgICAgewogICAgICAgICAgICAgICAibG9uZ19uYW1lIiA6
+ICIxNTYwMC0wMDAiLAogICAgICAgICAgICAgICAic2hvcnRfbmFtZSIgOiAiMTU2MDAtMDAwIiwK
+ICAgICAgICAgICAgICAgInR5cGVzIiA6IFsgInBvc3RhbF9jb2RlIiBdCiAgICAgICAgICAgIH0K
+ICAgICAgICAgXSwKICAgICAgICAgImZvcm1hdHRlZF9hZGRyZXNzIiA6ICJBdi4gZG9zIEFybmFs
+ZG9zLCAxMzQyIC0gQ2VudHJvLCBGZXJuYW5kw7Nwb2xpcyAtIFNQLCAxNTYwMC0wMDAsIEJyYXpp
+bCIsCiAgICAgICAgICJnZW9tZXRyeSIgOiB7CiAgICAgICAgICAgICJsb2NhdGlvbiIgOiB7CiAg
+ICAgICAgICAgICAgICJsYXQiIDogLTIwLjI4MzY4OCwKICAgICAgICAgICAgICAgImxuZyIgOiAt
+NTAuMjUyNDk0MwogICAgICAgICAgICB9LAogICAgICAgICAgICAibG9jYXRpb25fdHlwZSIgOiAi
+Uk9PRlRPUCIsCiAgICAgICAgICAgICJ2aWV3cG9ydCIgOiB7CiAgICAgICAgICAgICAgICJub3J0
+aGVhc3QiIDogewogICAgICAgICAgICAgICAgICAibGF0IiA6IC0yMC4yODIzMzkwMTk3MDg0OSwK
+ICAgICAgICAgICAgICAgICAgImxuZyIgOiAtNTAuMjUxMTQ1MzE5NzA4NDkKICAgICAgICAgICAg
+ICAgfSwKICAgICAgICAgICAgICAgInNvdXRod2VzdCIgOiB7CiAgICAgICAgICAgICAgICAgICJs
+YXQiIDogLTIwLjI4NTAzNjk4MDI5MTUsCiAgICAgICAgICAgICAgICAgICJsbmciIDogLTUwLjI1
+Mzg0MzI4MDI5MTQ5CiAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgICB9LAog
+ICAgICAgICAicGFydGlhbF9tYXRjaCIgOiB0cnVlLAogICAgICAgICAicGxhY2VfaWQiIDogIkNo
+SUpZM2dOWGhyMmw1UVI4WDQ4WUtqek5CayIsCiAgICAgICAgICJ0eXBlcyIgOiBbICJzdHJlZXRf
+YWRkcmVzcyIgXQogICAgICB9CiAgIF0sCiAgICJzdGF0dXMiIDogIk9LIgp9Cgo=</outboundTemplate>
+        <inboundDataType>XML</inboundDataType>
+        <outboundDataType>JSON</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="3.3.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="3.3.1">
+            <stripNamespaces>true</stripNamespaces>
+          </serializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="3.3.1">
+            <splitType>Element_Name</splitType>
+            <elementName></elementName>
+            <level>1</level>
+            <query></query>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="3.3.1">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="3.3.1">
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.3.1">
+        <steps/>
+        <inboundDataType>XML</inboundDataType>
+        <outboundDataType>XML</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="3.3.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="3.3.1">
+            <stripNamespaces>true</stripNamespaces>
+          </serializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="3.3.1">
+            <splitType>Element_Name</splitType>
+            <elementName></elementName>
+            <level>1</level>
+            <query></query>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="3.3.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="3.3.1">
+            <stripNamespaces>true</stripNamespaces>
+          </serializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="3.3.1">
+            <splitType>Element_Name</splitType>
+            <elementName></elementName>
+            <level>1</level>
+            <query></query>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.3.1">
+        <rules>
+          <rule>
+            <sequenceNumber>0</sequenceNumber>
+            <name>Filter</name>
+            <data>
+              <entry>
+                <string>Script</string>
+                <string>tmp = $gc(&apos;result&apos;);
+
+
+if(tmp[&apos;status&apos;] == &apos;OK&apos;){
+	return true;
+}else{
+	control();
+	return false;
+}
+
+
+function control(){
+
+	var dbConn;
+	var ps;
+
+	try {
+
+		var SQL = &apos;INSERT INTO CORDINATES_CRTL (ID, STATUS) VALUES (?,?)&apos;;
+
+		dbConn = DatabaseConnectionFactory.createDatabaseConnection($gc(&apos;sourceDbDriver&apos;),$gc(&apos;sourceDbUrl&apos;),$gc(&apos;sourceDbUsername&apos;),$gc(&apos;sourceDbPassword&apos;));
+		ps = dbConn.getConnection().prepareStatement(SQL);
+
+		ps.setInt(1, $c(&apos;controlCode&apos;));
+		ps.setString(2, tmp[&apos;status&apos;]);
+
+		if(!ps.executeUpdate()){
+			throw &apos;An error ocurrent or try insert agm data on db&apos;;
+		}
+
+	} finally {
+		if (dbConn) {
+			dbConn.close();
+		}
+	}
+}</string>
+              </entry>
+            </data>
+            <type>JavaScript</type>
+            <script>tmp = $gc(&apos;result&apos;);
+
+
+if(tmp[&apos;status&apos;] == &apos;OK&apos;){
+	return true;
+}else{
+	control();
+	return false;
+}
+
+
+function control(){
+
+	var dbConn;
+	var ps;
+
+	try {
+
+		var SQL = &apos;INSERT INTO CORDINATES_CRTL (ID, STATUS) VALUES (?,?)&apos;;
+
+		dbConn = DatabaseConnectionFactory.createDatabaseConnection($gc(&apos;sourceDbDriver&apos;),$gc(&apos;sourceDbUrl&apos;),$gc(&apos;sourceDbUsername&apos;),$gc(&apos;sourceDbPassword&apos;));
+		ps = dbConn.getConnection().prepareStatement(SQL);
+
+		ps.setInt(1, $c(&apos;controlCode&apos;));
+		ps.setString(2, tmp[&apos;status&apos;]);
+
+		if(!ps.executeUpdate()){
+			throw &apos;An error ocurrent or try insert agm data on db&apos;;
+		}
+
+	} finally {
+		if (dbConn) {
+			dbConn.close();
+		}
+	}
+}</script>
+            <operator>NONE</operator>
+          </rule>
+        </rules>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>// Modify the message variable below to pre process data
+return message;</preprocessingScript>
+  <postprocessingScript>// This script executes once after a message has been processed
+// Responses returned from here will be stored as &quot;Postprocessor&quot; in the response map
+return;</postprocessingScript>
+  <deployScript>$gc(&apos;sourceDbDriver&apos;, &apos;com.mysql.jdbc.Driver&apos;);
+$gc(&apos;sourceDbUrl&apos;,&apos;jdbc:mysql://localhost:3306/redb&apos;);
+$gc(&apos;sourceDbUsername&apos;,  &apos;root&apos;);
+$gc(&apos;sourceDbPassword&apos;, &apos;&apos;);
+
+$gc(&apos;key&apos;, &apos;AIzaSyBrEBCJhZ317-IIanIEbdLI7DF6GaytK64&apos;);
+return;</deployScript>
+  <undeployScript>// This script executes once when the channel is undeployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</undeployScript>
+  <properties version="3.3.1">
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>PRODUCTION</messageStorageMode>
+    <encryptData>false</encryptData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STARTED</initialState>
+    <storeAttachments>false</storeAttachments>
+    <tags class="linked-hash-set"/>
+    <metaDataColumns>
+      <metaDataColumn>
+        <name>SOURCE</name>
+        <type>STRING</type>
+        <mappingName>mirth_source</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>TYPE</name>
+        <type>STRING</type>
+        <mappingName>mirth_type</mappingName>
+      </metaDataColumn>
+    </metaDataColumns>
+    <attachmentProperties>
+      <type>None</type>
+      <properties/>
+    </attachmentProperties>
+    <archiveEnabled>true</archiveEnabled>
+    <resourceIds class="linked-hash-set">
+      <string>Default Resource</string>
+    </resourceIds>
+  </properties>
+  <codeTemplateLibraries>
+    <codeTemplateLibrary version="3.3.1">
+      <id>2a32ec64-1c3c-4bbe-9e15-4f630496966c</id>
+      <name>General</name>
+      <revision>2</revision>
+      <lastModified>
+        <time>1516726480412</time>
+        <timezone>America/Sao_Paulo</timezone>
+      </lastModified>
+      <description></description>
+      <includeNewChannels>true</includeNewChannels>
+      <enabledChannelIds>
+        <string>3c5d66a9-a5cc-43db-81db-9667a6c0cdfd</string>
+        <string>e1cfdb20-b3ae-497c-8231-7cec0352f579</string>
+        <string>7ca8b7ca-9e90-44ea-b744-3c0682c71d3b</string>
+        <string>d2639b55-dfb1-47ce-9b32-577cc013fc7a</string>
+        <string>9013cbdd-3c99-460d-9ca1-c1bbb8c16de9</string>
+        <string>41251baf-aab8-4992-878a-a54c666cad3f</string>
+        <string>62295ca9-fcc8-49d6-8c4a-1ab8fd9b09f4</string>
+      </enabledChannelIds>
+      <disabledChannelIds>
+        <string>d6767e52-a82c-49aa-8be7-62bd217b889c</string>
+        <string>a182fbdd-a6d1-4992-94d7-f4b7a65253ee</string>
+        <string>ad94c707-227a-461c-8e0e-76055c7a6c55</string>
+        <string>b914d15f-d687-4959-8630-4e87f1e5bb11</string>
+        <string>ae929474-69a7-400e-aedf-071e24c91216</string>
+        <string>b3564124-9ce2-4f0f-86f8-8f0897e25837</string>
+      </disabledChannelIds>
+      <codeTemplates>
+        <codeTemplate version="3.3.1">
+          <id>487488d6-a348-44fc-85bf-509c753ccf60</id>
+          <name>Date Format FLow</name>
+          <revision>1</revision>
+          <lastModified>
+            <time>1515789380760</time>
+            <timezone>America/Sao_Paulo</timezone>
+          </lastModified>
+          <type>FUNCTION</type>
+          <contextSet>
+            <delegate>
+              <contextType>GLOBAL_UNDEPLOY</contextType>
+              <contextType>GLOBAL_PREPROCESSOR</contextType>
+              <contextType>CHANNEL_ATTACHMENT</contextType>
+              <contextType>CHANNEL_POSTPROCESSOR</contextType>
+              <contextType>GLOBAL_DEPLOY</contextType>
+              <contextType>SOURCE_RECEIVER</contextType>
+              <contextType>DESTINATION_DISPATCHER</contextType>
+              <contextType>GLOBAL_POSTPROCESSOR</contextType>
+              <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              <contextType>CHANNEL_DEPLOY</contextType>
+              <contextType>CHANNEL_PREPROCESSOR</contextType>
+              <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+              <contextType>CHANNEL_UNDEPLOY</contextType>
+              <contextType>CHANNEL_BATCH</contextType>
+              <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+            </delegate>
+          </contextSet>
+          <code>/**
+	@param {String} dateIn - date source
+	@return {String} return date format flow yyyy-mm-ddThh:mm:ss-0(timezone)
+*/
+function dateFlow(dateIn) {
+
+	if (dateIn.toString() == &apos;&apos; || dateIn.toString() == null )
+	{
+		return dateIn;
+	}else{
+
+		var d = new Date(convertDate(dateIn,&apos;yyyy-MM-dd&apos;));
+
+		var timeZone = d.getTimezoneOffset() / 60 *(-1) * 100;
+
+		timeZone = timeZone.toString();
+		var sinal = timeZone.substring(0, 1).toString();
+
+		if(sinal == &apos;-&apos;){
+			timeZone = &apos;-0&apos; + timeZone.substring(1,timeZone.length);
+		}else{
+			timeZone = &apos;+0&apos; + timeZone.substring(0,timeZone.length);
+		}
+	return convertDate(dateIn,&apos;yyyy-MM-dd&apos;)+&apos;T&apos;+convertDate(dateIn,&apos;HH:mm:ss&apos;)+timeZone;
+	}
+}</code>
+        </codeTemplate>
+        <codeTemplate version="3.3.1">
+          <id>d0251ea8-46a8-4a0b-9536-a3f63e9fdc8c</id>
+          <name>Insert - SystemLog</name>
+          <revision>1</revision>
+          <lastModified>
+            <time>1515789380057</time>
+            <timezone>America/Sao_Paulo</timezone>
+          </lastModified>
+          <type>FUNCTION</type>
+          <contextSet>
+            <delegate>
+              <contextType>GLOBAL_UNDEPLOY</contextType>
+              <contextType>GLOBAL_PREPROCESSOR</contextType>
+              <contextType>CHANNEL_ATTACHMENT</contextType>
+              <contextType>CHANNEL_POSTPROCESSOR</contextType>
+              <contextType>GLOBAL_DEPLOY</contextType>
+              <contextType>SOURCE_RECEIVER</contextType>
+              <contextType>DESTINATION_DISPATCHER</contextType>
+              <contextType>GLOBAL_POSTPROCESSOR</contextType>
+              <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              <contextType>CHANNEL_DEPLOY</contextType>
+              <contextType>CHANNEL_PREPROCESSOR</contextType>
+              <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+              <contextType>CHANNEL_UNDEPLOY</contextType>
+              <contextType>CHANNEL_BATCH</contextType>
+              <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+            </delegate>
+          </contextSet>
+          <code>/**
+	Write values into SYSTEMLOG table.
+
+	@param {String} channelId - The channel id.
+	@param {Int} eventType - The event type. Ex: 1 = ERROR, 2 = WARNING, 3 = INFO.
+	@param {String} eventDate - Timestamp which marks the occurrence of any event.
+	@param {String} eventDescription - The event description or error detail.
+	@param {Int} level - The criticality level of the event. Ex: 0 = NA, 1 = CRITICAL,
+
+	@return {String} systemLogId - The systemlog id at the database
+
+*/
+
+function saveSystemLog(channelId, eventType, eventDate, eventDescription, level) {
+
+	if(channelId == &quot;&quot; || channelId == null || channelId == undefined){
+
+		throw &apos;channelId cannot be null ou empty!&apos;;
+	}
+
+	if(eventType == &quot;&quot; || eventType == null || eventType == undefined){
+
+		throw &apos;eventType cannot be null ou empty!&apos;;
+	}
+
+	if(eventDate == &quot;&quot; || eventDate == null || eventDate == undefined){
+
+		throw &apos;eventDate cannot be null ou empty!&apos;;
+	}
+
+	if(level == &quot;&quot; || level == null || level == undefined){
+
+		throw &apos;level cannot be null ou empty!&apos;;
+	}
+
+	var dbConn;
+	var ps;
+	var rs;
+
+	try {
+
+		dbConn = DatabaseConnectionFactory.createDatabaseConnection($cfg(&apos;pva.db.driver&apos;),$cfg(&apos;pva.db.url&apos;),$cfg(&apos;pva.db.username&apos;),$cfg(&apos;pva.db.password&apos;));
+
+		insertSystemLog = &quot;INSERT INTO SYSTEMLOG (COD, EVENTTYPE, EVENTDATE, EVENTDESCRIPTION, LEVEL) VALUES (?,?,?,?,?)&quot;;
+
+		ps = dbConn.getConnection().prepareStatement(insertSystemLog, 1);
+		ps.setString(1, channelId);
+		ps.setInt(2, eventType);
+		ps.setTimestamp(3, new java.sql.Timestamp (new java.text.SimpleDateFormat(&apos;yyyyMMddHHmmss&apos;).parse(eventDate).getTime()));
+		ps.setBlob(4, new javax.sql.rowset.serial.SerialBlob(new java.lang.String(eventDescription).getBytes()));
+		ps.setInt(5, level);
+		ps.executeUpdate();
+
+		rs = ps.getGeneratedKeys();
+		rs.next();
+
+		return rs.getObject(1);
+
+	}catch(exception){
+		throw exception
+
+	}finally {
+		if (typeof rs != &quot;undefined&quot;){
+			rs.close();
+		}
+		if (typeof ps != &quot;undefined&quot;){
+			ps.close();
+		}
+		if (dbConn) {
+			dbConn.close();
+		}
+	}
+}</code>
+        </codeTemplate>
+        <codeTemplate version="3.3.1">
+          <id>1dc4e4ea-c0f6-4000-8dd2-f09cd52fa7ff</id>
+          <name>Lookup - Protocol</name>
+          <revision>1</revision>
+          <lastModified>
+            <time>1515789381600</time>
+            <timezone>America/Sao_Paulo</timezone>
+          </lastModified>
+          <type>FUNCTION</type>
+          <contextSet>
+            <delegate>
+              <contextType>GLOBAL_UNDEPLOY</contextType>
+              <contextType>GLOBAL_PREPROCESSOR</contextType>
+              <contextType>CHANNEL_ATTACHMENT</contextType>
+              <contextType>CHANNEL_POSTPROCESSOR</contextType>
+              <contextType>GLOBAL_DEPLOY</contextType>
+              <contextType>SOURCE_RECEIVER</contextType>
+              <contextType>DESTINATION_DISPATCHER</contextType>
+              <contextType>GLOBAL_POSTPROCESSOR</contextType>
+              <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              <contextType>CHANNEL_DEPLOY</contextType>
+              <contextType>CHANNEL_PREPROCESSOR</contextType>
+              <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+              <contextType>CHANNEL_UNDEPLOY</contextType>
+              <contextType>CHANNEL_BATCH</contextType>
+              <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+            </delegate>
+          </contextSet>
+          <code>/**
+	Verifies if a PROTOCOL is registered at PROTOCOL table and, if not, performs the insert to registry.
+
+	@param {String} protocolName - The protocol name.
+
+	@return {String} protocolId - The protocol id at the database.
+
+*/
+
+
+function lookupProtocol(protocolName) {
+
+	if(protocolName == &quot;&quot; || protocolName == null || protocolName == undefined){
+
+		throw &apos;protocolName cannot be null ou empty!&apos;;
+	}
+
+	var dbConn;
+	var ps;
+	var rs;
+
+	try {
+
+		var searchByName = &quot;SELECT ID FROM PROTOCOL WHERE VALUE = ?&quot;;
+
+		dbConn = DatabaseConnectionFactory.createDatabaseConnection($cfg(&apos;pva.db.driver&apos;),$cfg(&apos;pva.db.url&apos;),$cfg(&apos;pva.db.username&apos;),$cfg(&apos;pva.db.password&apos;));
+		ps = dbConn.getConnection().prepareStatement(searchByName);
+		ps.setString(1, protocolName);
+
+		rs = ps.executeQuery();
+
+		if(!rs.next()){
+
+			insertProtocol = &quot;INSERT INTO PROTOCOL (VALUE) VALUES (?)&quot;;
+
+			ps = dbConn.getConnection().prepareStatement(insertProtocol, 1);
+			ps.setString(1, protocolName);
+			ps.executeUpdate();
+
+			rs = ps.getGeneratedKeys();
+			rs.next();
+		}
+
+		return rs.getObject(1);
+
+	}catch(exception){
+		throw exception
+
+	}finally {
+		if (typeof rs != &quot;undefined&quot;){
+			rs.close();
+		}
+		if (typeof ps != &quot;undefined&quot;){
+			ps.close();
+		}
+		if (dbConn) {
+			dbConn.close();
+		}
+	}
+}</code>
+        </codeTemplate>
+        <codeTemplate version="3.3.1">
+          <id>9e8363eb-ccc8-4965-863f-eee27ea94cac</id>
+          <name>Lookup - Unit Filter</name>
+          <revision>1</revision>
+          <lastModified>
+            <time>1515789381859</time>
+            <timezone>America/Sao_Paulo</timezone>
+          </lastModified>
+          <type>FUNCTION</type>
+          <contextSet>
+            <delegate>
+              <contextType>DESTINATION_DISPATCHER</contextType>
+              <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+              <contextType>SOURCE_RECEIVER</contextType>
+              <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+            </delegate>
+          </contextSet>
+          <code>/**
+	Lookup at UNITFILTER table to check if an record must be filtered
+
+	@param {String} unitId - The unitId parameter accordding UNITID from UNITIDENTIFIER table.
+	@param {String} field - The FIELD that indicates filter context.
+	@param {String} value - The VALUE to perform the lookup.
+
+*/
+
+
+function lookupUnitFilter(unitId, field, value) {
+
+	if(unitId == &quot;&quot; || unitId == null || unitId == undefined){
+		throw &apos;unitId cannot be null ou empty!&apos;;
+	}else if(field == &quot;&quot; || field == null || field == undefined){
+		throw &apos;field cannot be null ou empty!&apos;;
+	}else if(value == &quot;&quot; || value == null || value == undefined){
+		return false;
+	}
+
+	var dbConn;
+	var ps;
+	var rs;
+
+	try {
+		var searchValue = &quot;SELECT BEHAVIOR FROM UNITFILTER WHERE ID = (SELECT MAX(ID) FROM UNITFILTER WHERE 1=1 AND UNITID = ? AND FIELD = ? AND VALUE = ?)&quot;;
+
+		dbConn = DatabaseConnectionFactory.createDatabaseConnection($cfg(&apos;pva.db.driver&apos;),$cfg(&apos;pva.db.url&apos;),$cfg(&apos;pva.db.username&apos;),$cfg(&apos;pva.db.password&apos;));
+		ps = dbConn.getConnection().prepareStatement(searchValue);
+		ps.setString(1, unitId);
+		ps.setString(2, field);
+		ps.setString(3, value);
+
+		rs = ps.executeQuery();
+
+		if(!rs.next()){
+			return false;
+		}
+
+		return true;
+
+	}catch(exception){
+		throw exception
+
+	}finally {
+		if (dbConn) {
+			dbConn.close();
+		}
+	}
+}</code>
+        </codeTemplate>
+        <codeTemplate version="3.3.1">
+          <id>6fb38cca-d030-4bad-bb24-dced4b293868</id>
+          <name>Lookup - Unit Identifier</name>
+          <revision>1</revision>
+          <lastModified>
+            <time>1515789381344</time>
+            <timezone>America/Sao_Paulo</timezone>
+          </lastModified>
+          <type>FUNCTION</type>
+          <contextSet>
+            <delegate>
+              <contextType>GLOBAL_UNDEPLOY</contextType>
+              <contextType>GLOBAL_PREPROCESSOR</contextType>
+              <contextType>CHANNEL_ATTACHMENT</contextType>
+              <contextType>CHANNEL_POSTPROCESSOR</contextType>
+              <contextType>GLOBAL_DEPLOY</contextType>
+              <contextType>SOURCE_RECEIVER</contextType>
+              <contextType>DESTINATION_DISPATCHER</contextType>
+              <contextType>GLOBAL_POSTPROCESSOR</contextType>
+              <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              <contextType>CHANNEL_DEPLOY</contextType>
+              <contextType>CHANNEL_PREPROCESSOR</contextType>
+              <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+              <contextType>CHANNEL_UNDEPLOY</contextType>
+              <contextType>CHANNEL_BATCH</contextType>
+              <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+            </delegate>
+          </contextSet>
+          <code>/**
+	Lookup at UNITIDENTIFIER table to get UNITID value according the informed INTERNALID
+
+	@param {String} internalId - The internalId to search at to-from table, ex: RequireUnit, InstitutionName.
+
+	@return {String} unitid - The UNITYID according Flow Performance dictionary.
+*/
+
+function lookupUnitIdentifier(internalId) {
+
+	if(internalId == &quot;&quot; || internalId == null || internalId == undefined){
+		throw &apos;The search INTERNALID cannot be null ou empty!&apos;;
+	}
+
+	var dbConn;
+
+	try {
+		var searchByKey = &quot;SELECT UNITID FROM UNITIDENTIFIER WHERE INTERNALID = ?&quot;;
+		dbConn = DatabaseConnectionFactory.createDatabaseConnection($cfg(&apos;pva.db.driver&apos;),$cfg(&apos;pva.db.url&apos;),$cfg(&apos;pva.db.username&apos;),$cfg(&apos;pva.db.password&apos;));
+		ps = dbConn.getConnection().prepareStatement(searchByKey);
+		ps.setString(1, internalId);
+		rs = ps.executeQuery();
+
+		if(!rs.next()){
+			return null;
+		}
+
+		return rs.getObject(1);
+
+	}catch(exception){
+		throw exception
+	}finally {
+		if (dbConn) {
+			dbConn.close();
+		}
+	}
+}</code>
+        </codeTemplate>
+        <codeTemplate version="3.3.1">
+          <id>227868f1-a806-42d1-a862-36cd033b316c</id>
+          <name>Util - Convert Date</name>
+          <revision>1</revision>
+          <lastModified>
+            <time>1515789382120</time>
+            <timezone>America/Sao_Paulo</timezone>
+          </lastModified>
+          <type>FUNCTION</type>
+          <contextSet>
+            <delegate>
+              <contextType>GLOBAL_UNDEPLOY</contextType>
+              <contextType>GLOBAL_PREPROCESSOR</contextType>
+              <contextType>CHANNEL_ATTACHMENT</contextType>
+              <contextType>CHANNEL_POSTPROCESSOR</contextType>
+              <contextType>GLOBAL_DEPLOY</contextType>
+              <contextType>SOURCE_RECEIVER</contextType>
+              <contextType>DESTINATION_DISPATCHER</contextType>
+              <contextType>GLOBAL_POSTPROCESSOR</contextType>
+              <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+              <contextType>CHANNEL_DEPLOY</contextType>
+              <contextType>CHANNEL_PREPROCESSOR</contextType>
+              <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+              <contextType>CHANNEL_UNDEPLOY</contextType>
+              <contextType>CHANNEL_BATCH</contextType>
+              <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+            </delegate>
+          </contextSet>
+          <code>/**
+	Parses a date (String, Date, DateTime, or Number) into a string using an array of possible input patterns and the specified output pattern.
+*/
+
+var patterns = [
+	&apos;yyyy-MM-dd HH:mm:ss:SSS&apos;,
+	&apos;yyyy-MM-dd HH:mm:ss.SSS&apos;,
+	&apos;yyyy-MM-dd HH:mm:ss&apos;,
+	&apos;yyyy-MM-dd HH:mm&apos;,
+	&apos;EEE MMM dd HH:mm:ss:SSS zzz yyyy&apos;,
+	&apos;EEE MMM dd HH:mm:ss.SSS zzz yyyy&apos;,
+	&apos;EEE MMM dd HH:mm:ss zzz yyyy&apos;,
+	&apos;EEE MMM dd zzz yyyy&apos;,
+	&apos;dd-MMM-yyyy HH:mm:ss:SSS&apos;,
+	&apos;dd-MMM-yyyy HH:mm:ss.SSS&apos;,
+	&apos;dd-MMM-yyyy HH:mm:ss&apos;,
+	&apos;yyyy/MM/dd&apos;,
+	&apos;yyyy/MM/dd HH:mm&apos;,
+	&apos;yyyy/MM/dd HH:mm:ss&apos;,
+	&apos;dd/MM/yyyy&apos;,
+	&apos;dd/MM/yyyy HH:mm&apos;,
+	&apos;dd/MM/yyyy HH:mm:ss&apos;,
+	&apos;dd/MM/yy&apos;,
+	&apos;dd/MM/yy HH:mm&apos;,
+	&apos;dd/MM/yy HH:mm:ss&apos;,
+	&apos;yyyy-MM-dd&apos;,
+	&apos;yyyy-MM-dd&apos;,
+	&apos;yyyy MM dd&apos;,
+	&apos;yyyy.MM.dd&apos;,
+	&apos;MM-dd-yyyy&apos;,
+	&apos;MM dd yyyy&apos;,
+	&apos;MM.dd.yyyy&apos;,
+	&apos;HH:mm:ss:SSS&apos;,
+	&apos;HH:mm:ss.SSS&apos;,
+	&apos;HH:mm:ss&apos;,
+	&apos;ddMMyyyy&apos;,
+	&apos;ddMMyyyyHHmm&apos;,
+	&apos;ddMMyyyyHHmmss&apos;,
+	&apos;ddMMyy&apos;,
+	&apos;ddMMyyHHmm&apos;,
+	&apos;ddMMyyHHmmss&apos;,
+	&apos;yyyyMMddHHmmssSSSS&apos;,
+	&apos;yyyyMMdd HHmmss&apos;,
+	&apos;yyyyMMddHHmmss&apos;,
+	&apos;yyyyMMddHHmm&apos;,
+	&apos;yyyyMMdd&apos;,
+	&apos;yyyy-MM-dd\&apos;T\&apos;HH:mm:ssZ&apos;,
+	&apos;hh:mm:ss&apos;];
+
+var formatters = [];
+
+for each (pattern in patterns) {
+	formatters.push(org.joda.time.format.DateTimeFormat.forPattern(pattern));
+}
+
+function convertDate(date, outPattern) {
+
+	if(date == null || date == undefined || date == &quot;&quot;){
+		return null;
+	}
+
+	var instant = 0;
+	if (typeof date == &apos;number&apos; || date instanceof java.lang.Number)
+		instant = new Number(date);
+	else if (date instanceof Date || date instanceof java.util.Date)
+		instant = date.getTime();
+	else if (date instanceof org.joda.time.ReadableInstant)
+		instant = date.getMillis();
+	else {
+		for each (formatter in formatters) {
+			try {
+				instant = formatter.parseMillis(new String(date));
+				break;
+			} catch(exception) {}
+		}
+	}
+
+	return org.joda.time.format.DateTimeFormat.forPattern(outPattern).print(instant);
+}</code>
+        </codeTemplate>
+      </codeTemplates>
+    </codeTemplateLibrary>
+  </codeTemplateLibraries>
+</channel>

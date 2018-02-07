@@ -118,6 +118,11 @@ CREATE TABLE FAVORITOS (
   FOREIGN KEY (ESCOLA_ID) REFERENCES ESCOLAS (ID)
 );
 
+CREATE TABLE CORDINATES_CRTL (
+  ID int (11),
+  STATUS varchar(20)
+);
+
 /*
   SELECT table_schema                                        "DB Name",
     Round(Sum(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB"
