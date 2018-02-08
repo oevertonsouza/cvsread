@@ -32,13 +32,31 @@ module.exports = function(application) {
 
     acessoModel.getAcessoByUuid(token ,connection, function(err, result){
       if((result.length > 0) && (token = result[0].UUID)){
-        favoritosModel.postFavoritos(req.body, connection, function(err, result){
-          res.send({
-            "code":200,
-            "sucess":"Favorito inserido com sucesso.",
-            "message" : JSON.stringify(result)
+        favoritosModel.verifyFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
+            if ((result) && (result.length > 0)){
+              favoritosModel.removeFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
+                if(err){
+                  res.send({
+                    "code":400,
+                    "failed":"Erro ao remover favorito"
+                  });
+                }else{
+                  res.send({
+                    "code":200,
+                    "sucess":"Favorito removido com sucesso"
+                  });
+                }
+              });
+            }else if((result) && (result.length == 0)){
+              favoritosModel.postFavoritos(req.body, connection, function(err, result){
+                res.send({
+                  "code":200,
+                  "sucess":"Favorito inserido com sucesso",
+                  "message" : JSON.stringify(result)
+                });
+              });
+            }
           });
-        });
       }else{
         res.send({
           "code":202,

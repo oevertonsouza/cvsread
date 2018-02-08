@@ -24,6 +24,24 @@ module.exports = function(){
     connection.query(query, callback);
   };
 
+  this.verifyFavoritos = function(usuario_id, escola_id, connection, callback){
+    var query = `
+      select
+        * from FAVORITOS
+      where 1=1
+      and USUARIO_ID = ${usuario_id}
+      and ESCOLA_ID = ${escola_id};
+    `;
+    connection.query(query, callback);
+  };
+
+  this.removeFavoritos = function(usuario_id, escola_id, connection, callback){
+    var query = `
+      delete from FAVORITOS where USUARIO_ID = ${usuario_id} and ESCOLA_ID = ${escola_id};
+    `;
+    connection.query(query, callback);
+  };
+
   //Inserit Favorito
   this.postFavoritos = function(favoritos , connection, callback){
     connection.query(`insert into FAVORITOS SET ?;`, favoritos, callback);
