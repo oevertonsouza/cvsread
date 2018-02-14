@@ -1,7 +1,6 @@
 module.exports = function(application) {
   //post
   application.post('/register', function(req, res){
-
     var CryptoJS = require("crypto-js");
 
     var connection = application.config.dbConnection();
@@ -24,20 +23,22 @@ module.exports = function(application) {
       if ((result) && (result.length > 0) && (result[0].EMAIL = user.email)) {
         res.send({
           "code":202,
-          "warning":"Email já cadastrado."
+          "message":"Email já cadastrado.",
+          "description":"Verifique sua caixa de email, e ative sua conta.",
         });
       }else{
         usuariosModel.postUsuarios(user, connection, function(error, result){
           if (error) {
             res.send({
               "code":400,
-              "failed":"error ocurred",
-              "message": error.message
+              "message":"error ocurred",
+              "description": error.message
             })
           }else{
             res.send({
-              "code":200,
-              "success":"Usuário registrado com sucesso."
+                "code":200,
+                "message":"Usuário registrado com sucesso =).",
+                "description":"Acesse seu email e ative sua conta.",
             });
           }
         });

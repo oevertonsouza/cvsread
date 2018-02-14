@@ -2,6 +2,7 @@ module.exports = function(application) {
 
   application.get('/tipos', function(req, res){
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
     var connection = application.config.dbConnection();
     var tiposModel = application.app.models.tiposModel;
     var acessoModel = application.app.models.acessoModel;
