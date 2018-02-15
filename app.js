@@ -1,5 +1,5 @@
 var app = require('./config/server');
 
-app.listen(4200, function(){
+app.listen(process.env.PORT || 5000, function(){
   console.log("Rodando com Express!");
 });
