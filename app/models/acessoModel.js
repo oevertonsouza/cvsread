@@ -6,14 +6,8 @@ module.exports = function(){
   };
 
   //retorna acesso
-  this.getAcessoById = function(id, connection, callback){
-    var query = `select UUID from ACESSO A where ID = ${id};`
-    connection.query(query ,callback);
-  };
-
-  //retorna acesso
   this.getAcessoByUuidAndUserId = function(uuid, userid, connection, callback){
-    var query = `select * from ACESSO where UUID = "${uuid}" and ID = "${userid}";`
+    var query = `select * from ACESSO where USUARIO_ID = ${userid} and UUID = "${uuid}";`
     connection.query(query ,callback);
   };
 
