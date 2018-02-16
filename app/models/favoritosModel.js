@@ -24,13 +24,13 @@ module.exports = function(){
     connection.query(query, callback);
   };
 
-  this.verifyFavoritos = function(usuario_id, escola_id, connection, callback){
+  this.verifyFavoritos = function(usuarioId, escolaId, connection, callback){
     var query = `
       select
         * from FAVORITOS
       where 1=1
-      and USUARIO_ID = ${usuario_id}
-      and ESCOLA_ID = ${escola_id};
+      and USUARIO_ID = ${usuarioId}
+      and ESCOLA_ID = ${escolaId};
     `;
     connection.query(query, callback);
   };
