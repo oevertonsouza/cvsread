@@ -31,7 +31,6 @@ module.exports = function(application) {
         });
         connection.end();
       }
-      connection.end();
     });
   });
 };
