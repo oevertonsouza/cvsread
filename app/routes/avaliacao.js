@@ -11,9 +11,9 @@ module.exports = function(application) {
 
     acessoModel.getAcessoByUuidAndUserId(token, userAgent, connection, function(err, result){
       if((result.length > 0) && (token = result[0].UUID)){
-        favoritosModel.verifyAvaliacao(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
+        avaliacoesModel.verifyAvaliacao(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
             if ((result) && (result.length > 0)){
-              favoritosModel.atualizaAvaliacao(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
+              avaliacoesModel.atualizaAvaliacao(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
                 if(err){
                   res.send({
                     "code":400,
@@ -27,7 +27,7 @@ module.exports = function(application) {
                 }
               });
             }else if((result) && (result.length == 0)){
-              favoritosModel.postAtualizacao(req.body, connection, function(err, result){
+              avaliacoesModel.postAtualizacao(req.body, connection, function(err, result){
                 res.send({
                   "code":200,
                   "sucess":"Avaliação efetuada com sucesso.",
