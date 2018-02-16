@@ -27,11 +27,11 @@ module.exports = function(application) {
     var favoritosModel = application.app.models.favoritosModel;
     var acessoModel = application.app.models.acessoModel;
 
-    var userAgent = req.headers['User-Agent'];
+    var userId = req.headers['userid'];
     var token = req.headers['x-auth-token'];
 
-    acessoModel.getAcessoByUuidAndUserId(token, userAgent, connection, function(err, result){
-      if((result.length > 0) && (token = result[0].UUID)){
+    acessoModel.getAcessoByUuidAndUserId(token, userId, connection, function(err, result){
+      if((result) && (result.length > 0) && (token = result[0].UUID)){
         favoritosModel.verifyFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
             if ((result) && (result.length > 0)){
               favoritosModel.removeFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){

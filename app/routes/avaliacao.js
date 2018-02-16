@@ -6,11 +6,11 @@ module.exports = function(application) {
     var avaliacoesModel = application.app.models.avaliacoesModel;
     var acessoModel = application.app.models.acessoModel;
 
-    var userAgent = req.headers['User-Agent'];
+    var userId = req.headers['userid'];
     var token = req.headers['x-auth-token'];
 
-    acessoModel.getAcessoByUuidAndUserId(token, userAgent, connection, function(err, result){
-      if((result.length > 0) && (token = result[0].UUID)){
+    acessoModel.getAcessoByUuidAndUserId(token, userId, connection, function(err, result){
+      if((result) && (result.length > 0) && (token = result[0].UUID)){
         avaliacoesModel.verifyAvaliacao(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
             if ((result) && (result.length > 0)){
               avaliacoesModel.atualizaAvaliacao(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
