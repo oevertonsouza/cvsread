@@ -5,7 +5,7 @@ var connMySql = function(){
     host: "",
     user: "",
     password: "",
-    database : ''
+    database : ""
   });
 };
 
