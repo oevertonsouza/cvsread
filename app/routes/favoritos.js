@@ -31,7 +31,7 @@ module.exports = function(application) {
     var token = req.headers['x-auth-token'];
 
     acessoModel.getAcessoByUuidAndUserId(token, userId, connection, function(err, result){
-      if((result) && (result.length > 0) && (token = result[0].UUID)){
+      if((result.length > 0) && (token = result[0].UUID)){
         favoritosModel.verifyFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
             if ((result) && (result.length > 0)){
               favoritosModel.removeFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
