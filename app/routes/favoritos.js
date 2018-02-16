@@ -30,11 +30,13 @@ module.exports = function(application) {
     var userId = req.headers['userid'];
     var token = req.headers['x-auth-token'];
 
+    var favorito = req.body;
+
     acessoModel.getAcessoByUuidAndUserId(token, userId, connection, function(err, result){
       if((result.length > 0) && (token = result[0].UUID)){
-        favoritosModel.verifyFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
+        favoritosModel.verifyFavoritos(favorito.USUARIO_ID, favorito.ESCOLA_ID, connection, function(err, result){
             if ((result) && (result.length > 0)){
-              favoritosModel.removeFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
+              favoritosModel.removeFavoritos(favorito.USUARIO_ID, favorito.ESCOLA_ID, connection, function(err, result){
                 if(err){
                   res.send({
                     "code":400,
@@ -48,7 +50,7 @@ module.exports = function(application) {
                 }
               });
             }else if((result) && (result.length == 0)){
-              favoritosModel.postFavoritos(req.body, connection, function(err, result){
+              favoritosModel.postFavoritos(favorito, connection, function(err, result){
                 res.send({
                   "code":200,
                   "sucess":"Favorito inserido com sucesso",

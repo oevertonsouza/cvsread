@@ -7,10 +7,10 @@ var connMySql = function(){
     password: "moleiraindie",
     database : "redb"
     /*
-    host: "127.0.0.1",
-    user: "root",
-    password: "",
-    database : "redb"
+      host: "127.0.0.1",
+      user: "root",
+      password: "",
+      database : "redb"
     */
   });
 };

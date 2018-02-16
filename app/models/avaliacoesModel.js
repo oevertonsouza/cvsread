@@ -11,13 +11,13 @@ module.exports = function(){
     connection.query(query ,callback);
   };
 
-  this.verifyAvaliacao = function(usuario_id, escola_id, connection, callback){
+  this.verifyAvaliacao = function(usuarioId, escolaId, connection, callback){
     var query = `
       select
         * from AVALIACAO
       where 1=1
-      and USUARIO_ID = ${usuario_id}
-      and ESCOLA_ID = ${escola_id};
+      and USUARIO_ID = ${usuarioId}
+      and ESCOLA_ID = ${escolaId};
     `;
     connection.query(query, callback);
   };
@@ -25,7 +25,7 @@ module.exports = function(){
 
   this.atualizaAvaliacao = function(usuarioId, escolaId, nota, connection, callback){
     var query = `
-      update from AVALIACAO
+      update AVALIACAO
         set NOTA = ${nota}
       where 1=1
         and USUARIO_ID = ${usuarioId}
