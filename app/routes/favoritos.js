@@ -30,7 +30,7 @@ module.exports = function(application) {
     var userAgent = req.headers['User-Agent'];
     var token = req.headers['x-auth-token'];
 
-    acessoModel.getAcessoByUuid(token ,connection, function(err, result){
+    acessoModel.getAcessoByUuidAndUserId(token, userAgent, connection, function(err, result){
       if((result.length > 0) && (token = result[0].UUID)){
         favoritosModel.verifyFavoritos(req.body.usuario_id,req.body.escola_id, connection, function(err, result){
             if ((result) && (result.length > 0)){
