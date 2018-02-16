@@ -2,10 +2,10 @@ var mysql = require('mysql');
 
 var connMySql = function(){
   return mysql.createConnection({
-    host: "",
-    user: "",
-    password: "",
-    database : ""
+    host: "mysql427.umbler.com",
+    user: "moleria",
+    password: "moleiraindie",
+    database : "redb"
   });
 };
 
