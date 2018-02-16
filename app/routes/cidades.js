@@ -11,22 +11,27 @@ module.exports = function(application) {
         if(req.query.id){
           cidadesModel.getCidadeById(req.query.id, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else if(req.query.desc){
           cidadesModel.getCidadeByDescription(req.query.desc, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else{
           cidadesModel.getCidades(connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }
       }else{
         res.send({
           "code":202,
           "failed":"Chave inválida"
-        })
+        });
+        connection.end();
       }
+      connection.end();
     });
   });
 };

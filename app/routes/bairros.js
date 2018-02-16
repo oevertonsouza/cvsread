@@ -12,14 +12,17 @@ module.exports = function(application) {
         {
           bairrosModel.getBairroById(req.query.id, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else if(req.query.desc){
           bairrosModel.getBairroByDescricao(req.query.desc, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else{
           bairrosModel.getBairros(connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }
       }else{
@@ -27,7 +30,9 @@ module.exports = function(application) {
           "code":202,
           "failed":"Chave inválida"
         });
+        connection.end();
       }
+      connection.end();
     })
   });
 
@@ -39,6 +44,7 @@ module.exports = function(application) {
 
       bairrosModel.postTipo(req.body.descricao, connection, function(err, result){
           res.send(result);
+          connection.end();
       });
   });
 

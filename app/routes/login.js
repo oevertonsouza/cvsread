@@ -23,7 +23,8 @@ module.exports = function(application) {
         res.send({
           "code":400,
           "failed":"error ocurred"
-        })
+        });
+        connection.end();
       }else{
         var bytes  = CryptoJS.AES.decrypt(result[0].PASSWORD, 'CHAVE');
         var plaintext = bytes.toString(CryptoJS.enc.Utf8);
@@ -35,6 +36,7 @@ module.exports = function(application) {
                   "code":400,
                   "failed":"error ocurred"
                 });
+                connection.end();
               }else{
                 res.send({
                   "code":200,
@@ -42,6 +44,7 @@ module.exports = function(application) {
                   "accessId":acesso.uuid,
                   "userId": acesso.usuario_id
                 });
+                connection.end();
               }
             });
           }else{
@@ -49,8 +52,10 @@ module.exports = function(application) {
               "code":204,
               "success":"Falha ao efetuar login"
             });
+            connection.end();
           }
         }
+        connection.end();
     });
   });
 }

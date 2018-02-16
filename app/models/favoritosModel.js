@@ -21,9 +21,6 @@ module.exports = function(){
       where USUARIO_ID = ${usuario_id};
     `;
     connection.query(query, callback);
-    connection.end(function(err) {
-      console.log('connection close');
-    });
   };
 
   this.verifyFavoritos = function(usuarioId, escolaId, connection, callback){

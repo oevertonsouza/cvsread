@@ -12,14 +12,17 @@ module.exports = function(application) {
         {
           escolasModel.getEscolaById(req.query.id, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else if(req.query.desc){
           escolasModel.getEscolaByDescription(req.query.desc, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else{
           escolasModel.getEscolas(connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }
       }else{
@@ -27,7 +30,9 @@ module.exports = function(application) {
           "code":202,
           "failed":"Chave inválida"
         });
+        connection.end();
       }
+      connection.end();
     });
   });
 };

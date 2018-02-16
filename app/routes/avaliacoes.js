@@ -21,11 +21,13 @@ module.exports = function(application) {
                     "code":400,
                     "failed":"Erro ao atualizar avaliação."
                   });
+                  connection.end();
                 }else{
                   res.send({
                     "code":200,
                     "sucess":"Avaliacao atualizada com sucesso."
                   });
+                  connection.end();
                 }
               });
             }else if((result) && (result.length == 0)){
@@ -35,6 +37,7 @@ module.exports = function(application) {
                   "sucess":"Avaliação efetuada com sucesso.",
                   "message" : JSON.stringify(result)
                 });
+                connection.end();
               });
             }
           });
@@ -43,7 +46,9 @@ module.exports = function(application) {
           "code":202,
           "failed":"Chave inválida"
         });
+        connection.end();
       };
+      connection.end();
     });
   });
 };

@@ -12,22 +12,27 @@ module.exports = function(application) {
         {
           estadosModel.getEstadoById(req.query.id, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else if(req.query.desc){
           estadosModel.getEstadoByDescription(req.query.desc, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else{
           estadosModel.getEstados(connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }
       }else{
         res.send({
           "code":202,
           "failed":"Chave inválida"
-        })
+        });
+        connection.end();
       }
+      connection.end();
     });
   });
 };

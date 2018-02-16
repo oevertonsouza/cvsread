@@ -12,14 +12,17 @@ module.exports = function(application) {
         {
           depadmsModel.getDepadmById(req.query.id, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else if(req.query.desc){
           depadmsModel.getDepadmByDescription(req.query.desc, connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }else{
           depadmsModel.getDepadms(connection, function(err, result){
             res.send(result);
+            connection.end();
           });
         }
       }else{
@@ -27,8 +30,10 @@ module.exports = function(application) {
           "code":202,
           "failed":"Chave inválida"
         });
+        connection.end();
       }
-    })
+      connection.end();
+    });
   });
 
 };
