@@ -12,8 +12,8 @@ module.exports = function(){
   };
 
   //retorna acesso
-  this.getAcessoByUuid = function(uuid, connection, callback){
-    var query = `select * from ACESSO where UUID = "${uuid}";`
+  this.getAcessoByUuidAndUserId = function(uuid, userid, connection, callback){
+    var query = `select * from ACESSO where UUID = "${uuid}" and ID = "${userid}";`
     connection.query(query ,callback);
   };
 

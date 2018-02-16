@@ -6,7 +6,7 @@ module.exports = function(application) {
     var estadosModel = application.app.models.estadosModel;
     var acessoModel = application.app.models.acessoModel;
 
-    acessoModel.getAcessoByUuid(req.query.key,connection, function(err, result){
+    acessoModel.getAcessoByUuidAndUserId(req.query.key, req.query.userid,connection, function(err, result){
       if((result.length > 0) && (req.query.key = result[0].UUID)){
         if(req.query.id)
         {
