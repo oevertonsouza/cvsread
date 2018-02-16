@@ -35,9 +35,6 @@ module.exports = function(){
       and ESCOLA_ID = ${escolaId};
     `;
     connection.query(query, callback);
-    connection.end(function(err) {
-      console.log('connection close');
-    });
   };
 
   this.removeFavoritos = function(usuario_id, escola_id, connection, callback){
@@ -45,20 +42,12 @@ module.exports = function(){
       delete from FAVORITOS where USUARIO_ID = ${usuario_id} and ESCOLA_ID = ${escola_id};
     `;
     connection.query(query, callback);
-    connection.end(function(err) {
-      console.log('connection close');
-    });
   };
 
   //Inserit Favorito
   this.postFavoritos = function(favoritos , connection, callback){
     connection.query(`insert into FAVORITOS SET ?;`, favoritos, callback);
-    connection.end(function(err) {
-      console.log('connection close');
-    });
   };
-
-
 
   return this;
 }
