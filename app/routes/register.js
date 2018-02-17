@@ -26,7 +26,6 @@ module.exports = function(application) {
           "message":"Email já cadastrado.",
           "description":"Verifique sua caixa de email, e ative sua conta.",
         });
-        connection.end();
       }else{
         usuariosModel.postUsuarios(user, connection, function(error, result){
           if (error) {
@@ -35,18 +34,16 @@ module.exports = function(application) {
               "message":"error ocurred",
               "description": error.message
             });
-            connection.end();
           }else{
             res.send({
                 "code":200,
                 "message":"Usuário registrado com sucesso =).",
                 "description":"Acesse seu email e ative sua conta.",
             });
-            connection.end();
-          }
-          connection.end();
+          };
         });
-      }
+      };
+      connection.end();
     });
   });
 };

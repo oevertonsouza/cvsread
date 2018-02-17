@@ -12,26 +12,23 @@ module.exports = function(application) {
         {
           tiposModel.getTipoById(req.query.id, connection, function(err, result){
             res.send(result);
-            connection.end();
           });
         }else if(req.query.desc){
           tiposModel.getTipoByDescription(req.query.desc, connection, function(err, result){
             res.send(result);
-            connection.end();
           });
         }else{
           tiposModel.getTipos(connection, function(err, result){
             res.send(result);
-            connection.end();
           });
-        }
+        };
       }else{
         res.send({
           "code":202,
           "failed":"Chave inválida"
         });
-        connection.end();
       };
+      connection.end();
     });
   });
 };

@@ -12,38 +12,23 @@ module.exports = function(application) {
         {
           enderecosModel.getEnderecoById(req.query.id, connection, function(err, result){
             res.send(result);
-            connection.end();
           });
         }else if(req.query.desc){
           enderecosModel.getEnderecoByDescription(req.query.desc, connection, function(err, result){
             res.send(result);
-            connection.end();
           });
         }else{
           enderecosModel.getEnderecos(connection, function(err, result){
             res.send(result);
-            connection.end();
           });
-        }
+        };
       }else{
         res.send({
           "code":202,
           "failed":"Chave inválida"
         });
-        connection.end();
-      }
+      };
+      connection.end();
     });
   });
-
-  //post
-  application.post('/endereco', function(req, res){
-
-      var connection = application.config.dbConnection();
-      var enderecosModel = application.app.models.enderecosModel;
-
-      enderecosModel.postTipo(req.body.descricao, connection, function(err, result){
-          res.send(result);
-      });
-  });
-
 };

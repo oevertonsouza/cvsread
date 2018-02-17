@@ -18,6 +18,7 @@ module.exports = function(application) {
           "failed":"Chave inválida"
         });
       };
+      connection.end();
     });
   });
 
@@ -42,14 +43,12 @@ module.exports = function(application) {
                     "code":400,
                     "failed":"Erro ao remover favorito"
                   });
-                  connection.end();
                 }else{
                   res.send({
                     "code":200,
                     "sucess":"Favorito removido com sucesso"
                   });
-                  connection.end();
-                }
+                };
               });
             }else if((result) && (result.length == 0)){
               favoritosModel.postFavoritos(favorito, connection, function(err, result){
@@ -58,17 +57,16 @@ module.exports = function(application) {
                   "sucess":"Favorito inserido com sucesso",
                   "message" : JSON.stringify(result)
                 });
-                connection.end();
               });
-            }
+            };
           });
       }else{
         res.send({
           "code":202,
           "failed":"Chave inválida"
         });
-        connection.end();
       };
+      connection.end();
     });
   });
 };
